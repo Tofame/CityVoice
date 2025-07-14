@@ -32,3 +32,9 @@ It fosters engamenet and awareness of the townsfolk about how their city prosper
 - **Go (Golang)**
 - **JWT** for secure authentication
 - RESTful API
+
+## 📝 Current Implementation Details
+- JWT secret key is *currently* not so secret, I will move it (make new one) to .env when it's production and not development.
+- Currently I use local database with connection string being straight in DB class. This also will be .env or settings file.
+- The local database I use is on port 3306, localhost, setup with XAMPP, but can be anything.
+- When run, the app is set to run on port 8080, e.g. http://localhost:8080/?#
