@@ -1,4 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Main buttons on navbar left side
+    const homeLink = document.getElementById('homeLink');
+
+    // Main Page Stuff
+    const mainContent = document.getElementById('mainContent');
+
+    const newsletterForm = document.getElementById('newsletterForm');
+
     const userEmailSpan = document.getElementById('user-email');
     const loginBtn = document.getElementById('loginBtn');
     const logoutBtn = document.getElementById('logoutBtn');
@@ -84,25 +92,35 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function showLoginForm() {
+    const showLoginForm = () => {
         loginForm.classList.remove('hidden');
-        setTimeout(() => loginForm.classList.add('show'), 10);
-    }
+        loginForm.classList.add('show');
+        registerForm.classList.add('hidden');
+        mainContent.classList.add('hidden');
+    };
 
     function hideLoginForm() {
         loginForm.classList.remove('show');
         setTimeout(() => loginForm.classList.add('hidden'), 300);
     }
 
-    function showRegisterForm() {
+    const showRegisterForm = () => {
         registerForm.classList.remove('hidden');
-        setTimeout(() => registerForm.classList.add('show'), 10);
-    }
+        registerForm.classList.add('show');
+        loginForm.classList.add('hidden');
+        mainContent.classList.add('hidden');
+    };
 
     function hideRegisterForm() {
         registerForm.classList.remove('show');
         setTimeout(() => registerForm.classList.add('hidden'), 300);
     }
+
+    const showMainContent = () => {
+        registerForm.classList.add('hidden');
+        loginForm.classList.add('hidden');
+        mainContent.classList.remove('hidden');
+    };
 
     loginBtn.onclick = () => {
         showLoginForm();
@@ -112,7 +130,12 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.removeItem('token');
         updateUI();
         showMessage('Logged out successfully!', 'info');
+        showMainContent();
     };
+
+    homeLink.addEventListener('click', (e) => {
+        showMainContent();
+    });
 
     submitLoginBtn.onclick = async () => {
         const email = emailInput.value.trim();
@@ -255,6 +278,39 @@ document.addEventListener('DOMContentLoaded', () => {
         hideRegisterForm();
         showLoginForm();
     };
+
+    newsletterForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const emailInput = newsletterForm.querySelector('input[type="email"]');
+        const email = emailInput.value.trim();
+
+        if (!email) {
+            showMessage('Please enter a valid email address.', 'error');
+            return;
+        }
+
+        try {
+            const response = await fetch('/service/newsletter', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                showMessage(data.message || 'Thanks for your interest! Check your email to confirm.', 'success');
+                emailInput.value = '';
+            } else {
+                // backend always returns 200 on duplicate—but handle generic failure just in case
+                showMessage(data.error || 'Signup failed. Please try again later.', 'error');
+            }
+
+        } catch (error) {
+            showMessage('Network error. Please try again later.', 'error');
+        }
+    });
 
     updateUI();
 });

@@ -13,6 +13,7 @@ func main() {
 
 	routes.AuthRoutes(r)
 	routes.UserRoutes(r)
+	routes.ServiceRoutes(r)
 
 	// Serve files
 	r.Static("/static", "./view")
