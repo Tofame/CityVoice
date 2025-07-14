@@ -2,6 +2,13 @@ body {
     font-family: 'Inter', sans-serif;
 }
 
+#mainContent {
+    background-image: url('/view/images/warsaw.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
 #loginForm,
 #registerForm {
     opacity: 0;
@@ -24,4 +31,54 @@ body {
 #registerForm.show {
     opacity: 1 !important;
     transform: translate(-50%, -50%) scale(1) !important;
+}
+
+.section-heading {
+    color: #1f2937; /* Tailwind's text-gray-800 */
+    font-size: 1.875rem; /* text-3xl */
+    font-weight: 700;     /* font-bold */
+    margin-bottom: 1.5rem; /* mb-6 */
+    padding: 0.5rem 1rem;
+    background-color: #fde047; /* bg-yellow-300 */
+    border-radius: 0.5rem; /* rounded-lg */
+    display: inline-block;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Tailwind shadow */
+}
+
+.project-card {
+    background-color: #ffffff;
+    padding: 1.25rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Ensure consistent height if needed */
+}
+
+.project-card:hover {
+    box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+}
+
+.project-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #2563eb;
+    margin-bottom: 0.5rem;
+}
+
+.project-description {
+    font-size: 0.875rem;
+    color: #4b5563;
+    margin-bottom: 0.75rem;
+}
+
+.project-link {
+    color: #1d4ed8;
+    font-weight: 600;
+    text-decoration: none;
+    margin-top: auto; /* Pushes it to the bottom */
+}
+.project-link:hover {
+    text-decoration: underline;
 }

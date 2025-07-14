@@ -16,7 +16,7 @@ func main() {
 	routes.ServiceRoutes(r)
 
 	// Serve files
-	r.Static("/static", "./view")
+	r.Static("/view", "./view")
 	r.GET("/", func(c *gin.Context) { c.File("./view/index.html") })
 
 	r.Run(":8080")
