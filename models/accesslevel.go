@@ -20,3 +20,5 @@ func (u *User) IsModerator() bool {
 func (u *User) IsVerifiedUser() bool {
 	return u.Access >= AccessUser && u.IsVerified
 }
+
+// Note - JS script.js has its own map to map access level -> string name

@@ -13,7 +13,7 @@
         <div class="flex items-center space-x-6">
             <a href="#" class="text-white text-2xl font-bold tracking-wide">CityVoice</a>
             <div class="md:flex space-x-6">
-                <a href="#" id="homeLink" class="text-white hover:text-blue-200 transition-colors duration-200 font-semibold">Home</a>
+                <a href="#" id="homeLink" class="home-link text-white hover:text-blue-200 transition-colors duration-200 font-semibold">Home</a>
                 <a href="#" class="text-white hover:text-blue-200 transition-colors duration-200 font-semibold">Browse Projects</a>
                 <a href="#" class="text-white hover:text-blue-200 transition-colors duration-200 font-semibold">Realised Projects</a>
                 <a href="#" class="text-white hover:text-blue-200 transition-colors duration-200 font-semibold">Know More</a>
@@ -21,7 +21,7 @@
         </div>
 
         <div class="flex items-center space-x-4">
-            <span id="user-info" class="text-white font-medium px-3 py-1 rounded-full bg-white bg-opacity-20">Guest</span>
+            <button id="user-info" class="text-white font-medium px-3 py-1 rounded-full bg-white bg-opacity-20">Guest</button>
             <button id="loginBtn" class="bg-white text-blue-700 px-4 py-2 rounded-full font-bold shadow hover:bg-blue-100 transition-all duration-200">Login</button>
             <button id="logoutBtn" class="bg-red-500 text-white px-4 py-2 rounded-full font-bold shadow hover:bg-red-600 transition-all duration-200 hidden">Logout</button>
         </div>
@@ -179,6 +179,23 @@
         </p>
     </div>
 
+    <div id="userProfile" class="hidden">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Your Profile</h2>
+        <div class="max-w-xl mx-auto bg-white p-6 rounded-xl shadow space-y-4 text-gray-800">
+            <p><strong>Email:</strong> <span id="profileEmail">-</span></p>
+            <p><strong>Name:</strong> <span id="profileName">-</span></p>
+            <p><strong>Surname:</strong> <span id="profileSurname">-</span></p>
+            <p><strong>Verified:</strong> <span id="profileVerified">-</span></p>
+            <p><strong>Joined:</strong> <span id="profileCreated">-</span></p>
+            <p><strong>Account Type:</strong> <span id="profileAccess">-</span></p>
+        </div>
+        <div class="text-center mt-6">
+            <button class="home-link bg-blue-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-blue-700 transition">
+                Back to Home
+            </button>
+        </div>
+    </div>
+
     <div id="messageBox" class="hidden fixed bottom-5 left-1/2 bg-blue-600 text-white px-6 py-3 rounded-lg shadow-xl transition-all duration-300 transform -translate-x-1/2 translate-y-full opacity-0 z-50 inline-block max-w-max">
         <p id="messageText"></p>
     </div>
@@ -190,7 +207,7 @@
             <div class="w-full md:w-1/4 flex flex-col items-center text-center">
                 <h3 class="text-lg font-semibold mb-3">Quick Links</h3>
                 <ul class="space-y-2 text-sm">
-                    <li><a href="#" class="hover:underline">Home</a></li>
+                    <li><a href="#" class="home-link hover:underline">Home</a></li>
                     <li><a href="#" class="hover:underline">Browse Projects</a></li>
                     <li><a href="#" class="hover:underline">Realised Projects</a></li>
                     <li><a href="#" class="hover:underline">Know More</a></li>

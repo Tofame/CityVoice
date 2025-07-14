@@ -1,3 +1,10 @@
+const AccessLevel = {
+    0: "Guest",
+    1: "Normal User",
+    2: "Moderator",
+    3: "Admin"
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     // Main buttons on navbar left side
     const homeLink = document.getElementById('homeLink');
@@ -24,6 +31,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const registerPrompt = document.getElementById('registerPrompt');
     const backToLogin = document.getElementById('backToLogin');
+
+    // User Profile
+    const userProfileDiv = document.getElementById('userProfile');
 
     const messageBox = document.getElementById('messageBox');
     const messageText = document.getElementById('messageText');
@@ -109,33 +119,36 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    const showLoginForm = () => {
-        loginForm.classList.remove('hidden');
-        loginForm.classList.add('show');
-        registerForm.classList.add('hidden');
+    // Hides all content 'subpages' (we are single page design so forms basically)
+    const hideAllContent = () => {
         mainContent.classList.add('hidden');
+        registerForm.classList.add('hidden');
+        loginForm.classList.add('hidden');
+        userProfileDiv.classList.add('hidden');
+    }
+
+    const showLoginForm = () => {
+        hideAllContent();
+        loginForm.classList.remove('hidden');
     };
 
     function hideLoginForm() {
-        loginForm.classList.remove('show');
         setTimeout(() => loginForm.classList.add('hidden'), 300);
     }
 
     const showRegisterForm = () => {
+        hideAllContent();
         registerForm.classList.remove('hidden');
-        registerForm.classList.add('show');
-        loginForm.classList.add('hidden');
-        mainContent.classList.add('hidden');
     };
 
     function hideRegisterForm() {
-        registerForm.classList.remove('show');
         setTimeout(() => registerForm.classList.add('hidden'), 300);
     }
 
     const showMainContent = () => {
         registerForm.classList.add('hidden');
         loginForm.classList.add('hidden');
+        userProfileDiv.classList.add('hidden');
         mainContent.classList.remove('hidden');
     };
 
@@ -327,6 +340,42 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             showMessage('Network error. Please try again later.', 'error');
         }
+    });
+
+    function showUserProfile(profile) {
+        hideAllContent();
+
+        // fill fields
+        profileEmail.textContent    = profile.email;
+        profileName.textContent     = profile.name      || '-';
+        profileSurname.textContent = profile.surname  || '-';
+        profileVerified.textContent = profile.is_verified ? 'Yes' : 'No';
+        profileCreated.textContent  = new Date(profile.created_at).toLocaleDateString();
+        profileAccess.textContent   = AccessLevel[profile.access] || "Unknown";
+
+        // show
+        userProfile.classList.remove('hidden');
+    }
+
+    userInfoSpan.addEventListener('click', async () => {
+        const token = localStorage.getItem('token');
+        if (!token) return; // probably a guest
+
+        const profile = await fetchUserProfile(token);
+        if (profile) showUserProfile(profile);
+    });
+
+    // Home Button
+    document.querySelectorAll('.home-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            // Hide all other sections
+            hideAllContent();
+            mainContent.classList.remove('hidden');
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
     });
 
     updateUI();

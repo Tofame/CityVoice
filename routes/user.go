@@ -60,12 +60,12 @@ func getUserProfile(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"user_id":    user.ID,
-		"email":      user.Email,
-		"isVerified": user.IsVerified,
-		"createdAt":  user.CreatedAt,
-		"access":     user.Access,
-		"name":       user.Name,
-		"surname":    user.Surname,
+		"user_id":     user.ID,
+		"email":       user.Email,
+		"is_verified": user.IsVerified,
+		"created_at":  user.CreatedAt,
+		"access":      user.Access,
+		"name":        user.Name,
+		"surname":     user.Surname,
 	})
 }
