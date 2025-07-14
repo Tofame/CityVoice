@@ -50,14 +50,6 @@ func RequireJWTAuth() gin.HandlerFunc {
 			return
 		}
 
-		accessFloat, ok := claims["access"].(float64)
-		if !ok {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid access level in token"})
-			c.Abort()
-			return
-		}
-
-		c.Set("access", uint(accessFloat))
 		c.Set("user_id", uint(userIDFloat))
 		c.Next()
 	}

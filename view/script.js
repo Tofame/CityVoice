@@ -22,6 +22,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const emailInput = document.getElementById('loginEmail');
     const passwordInput = document.getElementById('loginPassword');
 
+    const adminPanelBtn = document.getElementById('adminPanelBtn');
+
     const registerForm = document.getElementById('registerForm');
     const submitRegisterBtn = document.getElementById('submitRegisterBtn');
     const registerEmailInput = document.getElementById('registerEmail');
@@ -88,6 +90,9 @@ document.addEventListener('DOMContentLoaded', () => {
     async function updateUI() {
         const token = localStorage.getItem('token');
 
+        // Hide admin panel button
+        adminPanelBtn.classList.add("hidden");
+
         if (token) {
             const userProfile = await fetchUserProfile(token);
             let showProfile = false;
@@ -117,6 +122,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 userInfoSpan.click(); // shows user profile basically
             } else {
                 showMainContent(); // we are Guest so lets go to main content
+            }
+
+            // Show admin panel button
+            if(AccessLevel[userProfile.access] == "Admin") {
+                adminPanelBtn.classList.remove("hidden");
             }
         } else {
             userInfoSpan.textContent = 'Guest';
