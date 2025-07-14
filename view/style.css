@@ -49,13 +49,14 @@ body {
 
 .section-heading {
     color: #1f2937; /* Tailwind's text-gray-800 */
-    font-size: 1.875rem; /* text-3xl */
-    font-weight: 700;     /* font-bold */
-    margin-bottom: 1.5rem; /* mb-6 */
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
     padding: 0.5rem 1rem;
     background-color: #fde047; /* bg-yellow-300 */
     border-radius: 0.5rem; /* rounded-lg */
     display: inline-block;
+    text-align: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Tailwind shadow */
 }
 
