@@ -90,6 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (token) {
             const userProfile = await fetchUserProfile(token);
+            let showProfile = false;
             if (userProfile) {
                 // Setting name (and surname if available)
                 if(userProfile.name && userProfile.name.trim() !== "") {
@@ -98,9 +99,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         tmpText += " " + userProfile.surname;
                     }
                     userInfoSpan.textContent = tmpText;
+                    showProfile = true;
                 // Name not available, setting user id
                 } else if(userProfile.user_id) {
                     userInfoSpan.textContent = 'User ' + userProfile.user_id;
+                    showProfile = true;
                 // There is profile but neither ID nor Name (that should never happen, would be a bug)
                 } else {
                     userInfoSpan.textContent = '??? User';
@@ -110,12 +113,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             loginBtn.classList.add('hidden');
             logoutBtn.classList.remove('hidden');
-            hideLoginForm();
+            if(showProfile == true) {
+                userInfoSpan.click(); // shows user profile basically
+            } else {
+                showMainContent(); // we are Guest so lets go to main content
+            }
         } else {
             userInfoSpan.textContent = 'Guest';
             loginBtn.classList.remove('hidden');
             logoutBtn.classList.add('hidden');
-            hideLoginForm();
+            showMainContent(); // we are Guest so lets go to main content
         }
     }
 
