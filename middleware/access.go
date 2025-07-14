@@ -6,14 +6,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func RequireAccessFromJWT(level uint) gin.HandlerFunc {
+func RequireAccessFromJWT(level models.AccessLevel) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		accAny, ok := c.Get("access")
 		if !ok {
 			c.AbortWithStatusJSON(401, gin.H{"error": "login required"})
 			return
 		}
-		if accAny.(uint) < level {
+
+		access := accAny.(uint)
+		if models.AccessLevel(access) < level {
 			c.AbortWithStatusJSON(403, gin.H{"error": "insufficient rights"})
 			return
 		}
@@ -21,7 +23,7 @@ func RequireAccessFromJWT(level uint) gin.HandlerFunc {
 	}
 }
 
-func RequireAccessFromDB(level uint) gin.HandlerFunc {
+func RequireAccessFromDB(level models.AccessLevel) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		uidAny, ok := c.Get("user_id")
 		if !ok {

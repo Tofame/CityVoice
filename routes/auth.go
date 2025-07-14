@@ -4,6 +4,7 @@ import (
 	"CityVoice/database"
 	"CityVoice/models"
 	"CityVoice/utils"
+	"gorm.io/gorm"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -23,6 +24,18 @@ func register(c *gin.Context) {
 
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+		return
+	}
+
+	var existing models.User
+	if err := database.DB.
+		Select("id").
+		Where("email = ?", input.Email).
+		First(&existing).Error; err == nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Email already registered"})
+		return
+	} else if err != gorm.ErrRecordNotFound { // any DB error other than “not found”
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Database error"})
 		return
 	}
 
