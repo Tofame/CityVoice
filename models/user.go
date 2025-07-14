@@ -9,4 +9,6 @@ type User struct {
 	IsVerified bool   `gorm:"default:false"`
 	CreatedAt  time.Time
 	Access     AccessLevel `gorm:"default:1"`
+	Name       *string     `gorm:"column:name;varchar(255)"`
+	Surname    *string     `gorm:"column:surname;varchar(255)"`
 }

@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const newsletterForm = document.getElementById('newsletterForm');
 
-    const userEmailSpan = document.getElementById('user-email');
+    const userInfoSpan = document.getElementById('user-info');
     const loginBtn = document.getElementById('loginBtn');
     const logoutBtn = document.getElementById('logoutBtn');
     const loginForm = document.getElementById('loginForm');
@@ -48,9 +48,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 3000);
     }
 
-    async function fetchEmail(token) {
+    async function fetchUserProfile(token) {
         try {
-            const response = await fetch('/user/email', {
+            const response = await fetch('/user/profile', {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -58,16 +58,16 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (response.ok) {
-                const data = await response.json();
-                return data.email;
+                const userProfile = await response.json();
+                return userProfile;
             } else {
                 const errorData = await response.json();
-                console.error('Failed to fetch user email:', response.status, errorData.error);
+                console.error('Failed to fetch user profile:', response.status, errorData.error);
                 if (response.status === 401 || response.status === 404) {
                     localStorage.removeItem('token');
                     updateUI();
                 }
-                throw new Error(errorData.error || 'Failed to fetch email');
+                throw new Error(errorData.error || 'Failed to fetch user profile');
             }
         } catch (error) {
             console.error('Network or parsing error:', error);
@@ -79,13 +79,30 @@ document.addEventListener('DOMContentLoaded', () => {
         const token = localStorage.getItem('token');
 
         if (token) {
-            const email = await fetchEmail(token);
-            userEmailSpan.textContent = email || 'User';
+            const userProfile = await fetchUserProfile(token);
+            if (userProfile) {
+                // Setting name (and surname if available)
+                if(userProfile.name && userProfile.name.trim() !== "") {
+                    var tmpText = userProfile.name;
+                    if(userProfile.surname && userProfile.surname.trim() !== "") {
+                        tmpText += " " + userProfile.surname;
+                    }
+                    userInfoSpan.textContent = tmpText;
+                // Name not available, setting user id
+                } else if(userProfile.user_id) {
+                    userInfoSpan.textContent = 'User ' + userProfile.user_id;
+                // There is profile but neither ID nor Name (that should never happen, would be a bug)
+                } else {
+                    userInfoSpan.textContent = '??? User';
+                }
+            } else {
+                userInfoSpan.textContent = 'Unknown User';
+            }
             loginBtn.classList.add('hidden');
             logoutBtn.classList.remove('hidden');
             hideLoginForm();
         } else {
-            userEmailSpan.textContent = 'Guest';
+            userInfoSpan.textContent = 'Guest';
             loginBtn.classList.remove('hidden');
             logoutBtn.classList.add('hidden');
             hideLoginForm();
