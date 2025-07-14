@@ -197,6 +197,99 @@
         </div>
     </div>
 
+    <div id="adminPanel" class="hidden max-w-7xl mx-auto px-4 py-10">
+        <h2 class="text-3xl font-extrabold mb-6 text-blue-700 text-center">Admin Panel</h2>
+
+        <!-- Search and Filters -->
+        <div class="bg-white p-6 rounded-lg shadow mb-6 space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <input type="text" id="searchUser" placeholder="Search by email"
+                       class="px-4 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500" />
+
+                <select id="accessFilter" class="px-4 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500">
+                    <option value="">All Access Levels</option>
+                    <option value="1">User</option>
+                    <option value="2">Moderator</option>
+                    <option value="3">Admin</option>
+                </select>
+
+                <div class="flex flex-col md:flex-row gap-2">
+                    <input type="date" id="createdAfter" class="flex-1 px-4 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500" />
+                    <input type="date" id="createdBefore" class="flex-1 px-4 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500" />
+                </div>
+            </div>
+            <button id="filterBtn" class="mt-4 bg-blue-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-blue-700 transition">
+                Apply Filters
+            </button>
+        </div>
+
+        <!-- User List -->
+        <div id="userListContainer" class="bg-white rounded-lg shadow overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200 text-sm">
+                <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left font-medium text-gray-700">ID</th>
+                    <th class="px-6 py-3 text-left font-medium text-gray-700">Email</th>
+                    <th class="px-6 py-3 text-left font-medium text-gray-700">Name</th>
+                    <th class="px-6 py-3 text-left font-medium text-gray-700">Created</th>
+                    <th class="px-6 py-3 text-left font-medium text-gray-700">Verified</th>
+                    <th class="px-6 py-3 text-left font-medium text-gray-700">Access</th>
+                    <th class="px-6 py-3 text-left font-medium text-gray-700">Actions</th>
+                </tr>
+                </thead>
+                <tbody id="userList" class="bg-white divide-y divide-gray-200">
+                <!-- User rows injected here via JS -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex justify-center mt-6 space-x-2" id="paginationControls">
+            <!-- Page buttons injected here via JS -->
+        </div>
+
+        <!-- User Profile Panel -->
+        <div id="userProfilePanel" class="mt-10 bg-white p-6 rounded-lg shadow hidden">
+            <h3 class="text-xl font-bold mb-4">User Profile</h3>
+            <div class="space-y-2 text-sm text-gray-700">
+                <p><strong>Email:</strong> <span id="panelEmail">-</span></p>
+                <p><strong>Name:</strong> <span id="panelName">-</span></p>
+                <p><strong>Surname:</strong> <span id="panelSurname">-</span></p>
+                <p><strong>Access:</strong> <span id="panelAccess">-</span></p>
+                <p><strong>Created:</strong> <span id="panelCreated">-</span></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="adminPanel_editUserModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded shadow-lg w-96">
+            <h2 class="text-xl font-bold mb-4">Edit User</h2>
+            <form id="editUserForm">
+                <input type="hidden" id="editUserId" />
+                <label for="editEmail" class="block mb-1">Email:</label>
+                <input type="email" id="editEmail" class="w-full mb-3 border px-2 py-1 rounded" required />
+
+                <label for="editName" class="block mb-1">Name:</label>
+                <input type="text" id="editName" class="w-full mb-3 border px-2 py-1 rounded" />
+
+                <label for="editSurname" class="block mb-1">Surname:</label>
+                <input type="text" id="editSurname" class="w-full mb-3 border px-2 py-1 rounded" />
+
+                <label for="editAccess" class="block mb-1">Access Level:</label>
+                <select id="editAccess" class="w-full mb-3 border px-2 py-1 rounded">
+                    <option value="1">Normal User</option>
+                    <option value="2">Moderator</option>
+                    <option value="3">Admin</option>
+                </select>
+
+                <div class="flex justify-end space-x-2">
+                    <button type="button" id="cancelEditBtn" class="px-4 py-2 bg-gray-300 rounded">Cancel</button>
+                    <button type="submit" id="saveUserEdit" class="px-4 py-2 bg-blue-600 text-white rounded">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div id="messageBox" class="hidden fixed bottom-5 left-1/2 bg-blue-600 text-white px-6 py-3 rounded-lg shadow-xl transition-all duration-300 transform -translate-x-1/2 translate-y-full opacity-0 z-50 inline-block max-w-max">
         <p id="messageText"></p>
     </div>

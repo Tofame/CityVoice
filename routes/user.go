@@ -4,9 +4,8 @@ import (
 	"CityVoice/database"
 	"CityVoice/middleware"
 	"CityVoice/models"
-	"net/http"
-
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 func UserRoutes(r *gin.Engine) {
@@ -15,11 +14,6 @@ func UserRoutes(r *gin.Engine) {
 	user.GET("/email", getEmail)
 	user.GET("/id", getUserId)
 	user.GET("/profile", getUserProfile)
-
-	user.GET("/:id/profile",
-		middleware.RequireAccess(models.AccessAdmin),
-		getProfileByID,
-	)
 }
 
 func getEmail(c *gin.Context) {
@@ -60,27 +54,6 @@ func getUserProfile(c *gin.Context) {
 
 	var user models.User
 	if err := database.DB.First(&user, userID).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"user_id":     user.ID,
-		"email":       user.Email,
-		"is_verified": user.IsVerified,
-		"created_at":  user.CreatedAt,
-		"access":      user.Access,
-		"name":        user.Name,
-		"surname":     user.Surname,
-	})
-}
-
-func getProfileByID(c *gin.Context) {
-	// id comes from URL: /user/42/profile
-
-	idParam := c.Param("id")
-	var user models.User
-	if err := database.DB.First(&user, idParam).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
 		return
 	}
