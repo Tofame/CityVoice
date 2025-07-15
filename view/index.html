@@ -201,49 +201,116 @@
         <h2 class="text-3xl font-extrabold mb-6 text-blue-700 text-center">Admin Panel</h2>
 
         <!-- Users Search and Filters -->
-        <div class="bg-white p-6 rounded-lg shadow mb-6 space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <input type="text" id="searchUser" placeholder="Search by email"
-                       class="px-4 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500" />
+        <div class="mb-10">
+            <h3 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">👤 User Management</h3>
 
-                <select id="accessFilter" class="px-4 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500">
-                    <option value="">All Access Levels</option>
-                    <option value="1">User</option>
-                    <option value="2">Moderator</option>
-                    <option value="3">Admin</option>
-                </select>
+            <div class="bg-white p-6 rounded-lg shadow mb-6 space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <input type="text" id="searchUser" placeholder="Search by email"
+                           class="px-4 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500" />
 
-                <div class="flex flex-col md:flex-row gap-2">
-                    <input type="date" id="createdAfter" class="flex-1 px-4 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500" />
-                    <input type="date" id="createdBefore" class="flex-1 px-4 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500" />
+                    <select id="accessFilter" class="px-4 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500">
+                        <option value="">All Access Levels</option>
+                        <option value="1">User</option>
+                        <option value="2">Moderator</option>
+                        <option value="3">Admin</option>
+                    </select>
+
+                    <div class="flex flex-col md:flex-row gap-2">
+                        <input type="date" id="createdAfter" class="flex-1 px-4 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500" />
+                        <input type="date" id="createdBefore" class="flex-1 px-4 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500" />
+                    </div>
                 </div>
+                <button id="filterUsersBtn" class="mt-4 bg-blue-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-blue-700 transition">
+                    Apply Filters
+                </button>
             </div>
-            <button id="filterBtn" class="mt-4 bg-blue-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-blue-700 transition">
-                Apply Filters
-            </button>
+            <!-- Users List -->
+            <div id="userListContainer" class="bg-white rounded-lg shadow overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 text-sm">
+                    <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left font-medium text-gray-700">ID</th>
+                        <th class="px-6 py-3 text-left font-medium text-gray-700">Email</th>
+                        <th class="px-6 py-3 text-left font-medium text-gray-700">Name</th>
+                        <th class="px-6 py-3 text-left font-medium text-gray-700">Created</th>
+                        <th class="px-6 py-3 text-left font-medium text-gray-700">Verified</th>
+                        <th class="px-6 py-3 text-left font-medium text-gray-700">Access</th>
+                        <th class="px-6 py-3 text-left font-medium text-gray-700">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="userList" class="bg-white divide-y divide-gray-200">
+                    <!-- User rows injected here via JS -->
+                    </tbody>
+                </table>
+            </div>
+            <!-- Users Pagination -->
+            <div class="flex justify-center mt-6 space-x-2" id="paginationControls">
+                <!-- Page buttons injected here via JS -->
+            </div>
         </div>
-        <!-- Users List -->
-        <div id="userListContainer" class="bg-white rounded-lg shadow overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200 text-sm">
-                <thead class="bg-gray-50">
-                <tr>
-                    <th class="px-6 py-3 text-left font-medium text-gray-700">ID</th>
-                    <th class="px-6 py-3 text-left font-medium text-gray-700">Email</th>
-                    <th class="px-6 py-3 text-left font-medium text-gray-700">Name</th>
-                    <th class="px-6 py-3 text-left font-medium text-gray-700">Created</th>
-                    <th class="px-6 py-3 text-left font-medium text-gray-700">Verified</th>
-                    <th class="px-6 py-3 text-left font-medium text-gray-700">Access</th>
-                    <th class="px-6 py-3 text-left font-medium text-gray-700">Actions</th>
-                </tr>
-                </thead>
-                <tbody id="userList" class="bg-white divide-y divide-gray-200">
-                <!-- User rows injected here via JS -->
-                </tbody>
-            </table>
-        </div>
-        <!-- Users Pagination -->
-        <div class="flex justify-center mt-6 space-x-2" id="paginationControls">
-            <!-- Page buttons injected here via JS -->
+
+        <!-- Projects Search and Filters -->
+        <div class="mb-10">
+            <h3 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">👤 User Management</h3>
+
+            <div class="bg-white p-6 rounded-lg shadow mb-6 space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <input type="text" id="searchProjectTitle" placeholder="Search by title"
+                           class="px-4 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500" />
+
+                    <select id="categoryFilter" class="px-4 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500">
+                        <option value="">All Categories</option>
+                        <option value="Infrastructure">Infrastructure</option>
+                        <option value="Environment">Environment</option>
+                        <option value="Education">Education</option>
+                        <!-- Add more categories as needed -->
+                    </select>
+
+                    <select id="statusFilter" class="px-4 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500">
+                        <option value="">All Statuses</option>
+                        <option value="0">Pending</option>
+                        <option value="1">Rejected</option>
+                        <option value="2">Accepted</option>
+                        <option value="3">In-Progress</option>
+                        <option value="4">Cancelled</option>
+                        <option value="5">Realized</option>
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="date" id="createdAfter_Projects" class="px-4 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500" />
+                    <input type="date" id="createdBefore_Projects" class="px-4 py-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500" />
+                </div>
+
+                <button id="filterProjectsBtn" class="mt-4 bg-blue-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-blue-700 transition">
+                    Apply Filters
+                </button>
+            </div>
+            <!-- Projects List -->
+            <div id="projectListContainer" class="bg-white rounded-lg shadow overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 text-sm">
+                    <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left font-medium text-gray-700">ID</th>
+                        <th class="px-6 py-3 text-left font-medium text-gray-700">Title</th>
+                        <th class="px-6 py-3 text-left font-medium text-gray-700">Author ID</th>
+                        <th class="px-6 py-3 text-left font-medium text-gray-700">Category</th>
+                        <th class="px-6 py-3 text-left font-medium text-gray-700">Location</th>
+                        <th class="px-6 py-3 text-left font-medium text-gray-700">Status</th>
+                        <th class="px-6 py-3 text-left font-medium text-gray-700">Created</th>
+                        <th class="px-6 py-3 text-left font-medium text-gray-700">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="projectList" class="bg-white divide-y divide-gray-200">
+                    <!-- Project rows will be injected here via JS -->
+                    </tbody>
+                </table>
+            </div>
+            <!-- Projects Pagination -->
+            <div class="flex justify-center mt-6 space-x-2" id="paginationControls_Projects">
+                <!-- Pagination buttons injected here via JS -->
+            </div>
         </div>
     </div>
 

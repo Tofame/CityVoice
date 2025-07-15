@@ -4,9 +4,10 @@ type ProjectStatus uint
 
 const (
 	PENDING ProjectStatus = iota
-	IN_PROGRESS
 	REJECTED
 	ACCEPTED
+	IN_PROGRESS
+	CANCELLED
 	REALIZED
 )
 

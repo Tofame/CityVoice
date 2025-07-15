@@ -6,6 +6,7 @@ import (
 	"CityVoice/models"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -88,6 +89,7 @@ func getProjectByID(c *gin.Context) {
 
 	c.JSON(http.StatusOK, project)
 }
+
 func getProjects(c *gin.Context) {
 	query := database.DB.Model(&models.Project{})
 
@@ -96,8 +98,10 @@ func getProjects(c *gin.Context) {
 		query = query.Where("status != ?", models.PENDING)
 	}
 
-	if author := c.Query("author_id"); author != "" {
-		query = query.Where("author_id = ?", author)
+	// Filtering
+	if s := strings.TrimSpace(c.Query("search")); s != "" {
+		like := "%" + strings.ToLower(s) + "%"
+		query = query.Where("(LOWER(title) LIKE ?)", like)
 	}
 
 	if category := c.Query("category"); category != "" {
@@ -108,10 +112,26 @@ func getProjects(c *gin.Context) {
 		query = query.Where("status = ?", status)
 	}
 
-	// Pagination
+	createdAfter := c.Query("created_after")
+	createdBefore := c.Query("created_before")
+	if createdAfter != "" {
+		query = query.Where("created_at >= ?", createdAfter)
+	}
+	if createdBefore != "" {
+		query = query.Where("created_at <= ?", createdBefore)
+	}
+
+	// Pagination params
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "10"))
 	offset := (page - 1) * limit
+
+	// Get total count before limit/offset
+	var total int64
+	if err := query.Count(&total).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to count projects"})
+		return
+	}
 
 	var projects []models.Project
 	if err := query.Offset(offset).Limit(limit).Order("created_at DESC").Find(&projects).Error; err != nil {
@@ -119,7 +139,13 @@ func getProjects(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, projects)
+	// Return projects + pagination metadata
+	c.JSON(http.StatusOK, gin.H{
+		"projects": projects,
+		"total":    total,
+		"page":     page,
+		"limit":    limit,
+	})
 }
 
 func updateProject(c *gin.Context) {
