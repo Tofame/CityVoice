@@ -54,3 +54,12 @@ func RequireJWTAuth() gin.HandlerFunc {
 		c.Next()
 	}
 }
+
+func GetUserID(c *gin.Context) (uint, bool) {
+	userID, exists := c.Get("user_id")
+	if !exists {
+		return 0, false
+	}
+	uid, ok := userID.(uint)
+	return uid, ok
+}

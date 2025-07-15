@@ -15,6 +15,7 @@ func main() {
 	routes.UserRoutes(r)
 	routes.ServiceRoutes(r)
 	routes.AdminRoutes(r)
+	routes.ProjectRoutes(r)
 
 	// Serve files
 	r.Static("/view", "./view")

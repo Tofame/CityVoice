@@ -22,4 +22,6 @@ func Connect() {
 	// Auto-create tables based on models
 	DB.AutoMigrate(&models.User{})
 	DB.AutoMigrate(&models.Newsletter{})
+	DB.AutoMigrate(&models.Project{})
+	DB.AutoMigrate(&models.ProjectComment{})
 }

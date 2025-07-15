@@ -26,3 +26,22 @@ func RequireAccess(level models.AccessLevel) gin.HandlerFunc {
 		c.Next()
 	}
 }
+
+func GetAccess(c *gin.Context) (models.AccessLevel, bool) {
+	uidAny, ok := c.Get("user_id")
+	if !ok {
+		return models.AccessGuest, false
+	}
+
+	var user models.User
+	if err := database.DB.Select("access").First(&user, uidAny).Error; err != nil {
+		return models.AccessGuest, false
+	}
+
+	return user.Access, true
+}
+
+func IsAdmin(c *gin.Context) bool {
+	access, ok := GetAccess(c)
+	return ok && access == models.AccessAdmin
+}
