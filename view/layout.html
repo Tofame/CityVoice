@@ -69,12 +69,12 @@
       </div>
     </footer>
 
+    <div id="messageBox" class="hidden fixed bottom-5 left-1/2 bg-blue-600 text-white px-6 py-3 rounded-lg shadow-xl transition-all duration-300 transform -translate-x-1/2 translate-y-full opacity-0 z-50 inline-block max-w-max">
+      <p id="messageText"></p>
+    </div>
+
     <script src="/static/js/common.js"></script>
     <script src="/static/js/navigation_bar.js"></script>
     {{block "site_scripts" .}}{{end}}
   </body>
-
-  <div id="messageBox" class="hidden fixed bottom-5 left-1/2 bg-blue-600 text-white px-6 py-3 rounded-lg shadow-xl transition-all duration-300 transform -translate-x-1/2 translate-y-full opacity-0 z-50 inline-block max-w-max">
-    <p id="messageText"></p>
-  </div>
 </html>

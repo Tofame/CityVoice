@@ -13,7 +13,7 @@ nb_userInfoBtn.addEventListener('click', async () => {
     const token = localStorage.getItem('token');
     if (!token) return; // probably a guest
 
-    window.location.href = '/userprofile';
+    goToLink('/userprofile');
 
     const profile = await fetchUserProfile(token);
     if (profile) showUserProfile(profile);
@@ -21,11 +21,11 @@ nb_userInfoBtn.addEventListener('click', async () => {
 
 // Login/Logout Button
 nb_loginBtn.onclick = () => {
-    window.location.href = '/login';
+    goToLink('/login');
 };
 nb_logoutBtn.onclick = () => {
     localStorage.removeItem('token');
-    window.location.href = '/home';
+    goToLink('/home');
     updateUI();
     showMessage('Logged out successfully!', 'info');
 };
@@ -34,14 +34,15 @@ nb_logoutBtn.onclick = () => {
 nb_homeBtns.forEach(homeBtn => {
     homeBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        window.location.href = '/home';
-
-        // Decision whether to keep it here or not, good for refreshing, so may stay I guess?
-        fetchFeaturedProjects();
+        goToLink('/home');
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 });
+
+function goToLink(link) {
+    window.location.href = link;
+}
 
 function showUserProfile(profile) {
     hideAllContent();
