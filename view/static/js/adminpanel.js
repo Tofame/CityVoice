@@ -32,7 +32,7 @@ for (const key in ProjectCategory) {
         option.value = key;
         option.textContent = valueText.replace(/_/g, ' ');
         projectCategoryFilter.appendChild(option);
-        modal_editProjectCategory.appendChild(option);
+        modal_editProjectCategory.appendChild(option.cloneNode(true));
     }
 }
 const projectStatusFilter = document.getElementById("projectStatusFilter");
@@ -43,7 +43,7 @@ for (const key in ProjectStatus) {
         option.value = key;
         option.textContent = valueText;
         projectStatusFilter.appendChild(option);
-        modal_editProjectStatus.appendChild(option);
+        modal_editProjectStatus.appendChild(option.cloneNode(true));
     }
 }
 // userAccessFilter
@@ -59,7 +59,7 @@ for (const key in AccessLevel) {
         option.value = key;
         option.textContent = valueText;
         userAccessFilter.appendChild(option);
-        editUserAccessField.appendChild(option);
+        editUserAccessField.appendChild(option.cloneNode(true));
     }
 }
 // modal_editProjectDistrict
