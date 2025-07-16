@@ -26,6 +26,9 @@ func main() {
 	database.Connect()
 	r := gin.Default()
 
+	// Safety thing, to not allow spoofed ips
+	r.SetTrustedProxies(nil)
+
 	r.Static("/static", "./view/static")
 
 	routes.AuthRoutes(r)
