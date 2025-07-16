@@ -13,14 +13,13 @@ import (
 
 func ProjectRoutes(r *gin.Engine) {
 	project := r.Group("/project")
-	project.Use(middleware.RequireJWTAuth())
 
-	project.POST("", submitProject)
 	project.GET("/:id", getProjectByID)
 	project.GET("", getProjects)
+	project.POST("", middleware.RequireJWTAuth(), submitProject)
 
 	admin := project.Group("")
-	admin.Use(middleware.RequireAccess(models.AccessAdmin))
+	admin.Use(middleware.RequireJWTAuth(), middleware.RequireAccess(models.AccessAdmin))
 
 	admin.PUT("/:id", updateProject)
 	admin.PATCH("/:id/status", changeStatus)
@@ -119,6 +118,28 @@ func getProjects(c *gin.Context) {
 	}
 	if createdBefore != "" {
 		query = query.Where("created_at <= ?", createdBefore)
+	}
+
+	order := strings.ToLower(c.DefaultQuery("order", "newest"))
+	switch order {
+	case "most_popular_up":
+		query = query.Order("votes_up DESC")
+		break
+	case "most_popular_down":
+		query = query.Order("votes_up ASC")
+		break
+	case "least_popular_up":
+		query = query.Order("votes_down DESC")
+		break
+	case "least_popular_down":
+		query = query.Order("votes_down ASC")
+		break
+	case "oldest":
+		query = query.Order("created_at ASC")
+		break
+	case "newest":
+	default:
+		query = query.Order("created_at DESC")
 	}
 
 	// Pagination params

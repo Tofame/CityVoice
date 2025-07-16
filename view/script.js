@@ -20,6 +20,12 @@ const usersPerPage = 10;
 let currentProjectPage = 1;
 const projectsPerPage = 10;
 
+// Helper method to trim string
+function trimString(text, maxLength = 30) {
+    if (!text) return null;
+    return text.length > maxLength ? text.slice(0, maxLength) + '…' : text;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     // Main buttons on navbar left side
     const homeLink = document.getElementById('homeLink');
@@ -414,6 +420,9 @@ document.addEventListener('DOMContentLoaded', () => {
             // Hide all other sections
             hideAllContent();
             mainContent.classList.remove('hidden');
+
+            // Decision whether to keep it here or not, good for refreshing, so may stay I guess?
+            fetchFeaturedProjects();
 
             // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -890,5 +899,49 @@ document.addEventListener('DOMContentLoaded', () => {
         await fetchProjects(currentPage);
     };
 
+    // ========== Home Page
+    async function fetchFeaturedProjects() {
+        try {
+            const statusAcceptedKey = Object.keys(ProjectStatus).find(key => ProjectStatus[key] === "Accepted");
+            const res = await fetch(`/project?page=1&limit=3&order=most_popular_up&status=${statusAcceptedKey}`, {
+                method: 'GET'
+            });
+            const data = await res.json();
+            if (!res.ok) {
+                throw new Error(data.error || 'Failed to fetch projects');
+            }
+
+            renderFeaturedProjects(data.projects);
+        } catch (err) {
+            console.error('Error loading featured projects:', err);
+            document.getElementById('featured_projects_list').innerHTML = `
+            <p class="text-red-500 col-span-full text-center">Could not load featured projects.</p>
+        `;
+        }
+    }
+    function renderFeaturedProjects(projects) {
+        const container = document.getElementById('featured_projects_list');
+        container.innerHTML = ''; // clear existing static content
+
+        if (!projects.length) {
+            container.innerHTML = '<p class="col-span-full text-center text-gray-500">No projects found.</p>';
+            return;
+        }
+
+        projects.forEach(project => {
+            const card = document.createElement('div');
+            card.className = 'project-card';
+
+            card.innerHTML = `
+            <h3 class="project-title">${project.title}</h3>
+            <p class="project-description">${trimString(project.description, 90) || 'No description provided.'}</p>
+            <a href="/project/${project.project_id}" class="project-link">View project</a>
+        `;
+
+            container.appendChild(card);
+        });
+    }
+
+    fetchFeaturedProjects();
     updateUI();
 });
