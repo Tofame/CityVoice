@@ -180,8 +180,10 @@ function renderProjectList(projects) {
             const projectId = e.currentTarget.dataset.projectId;
             const token = localStorage.getItem('token');
             try {
-                const res = await fetch(`/admin/projects/${projectId}`, { headers: { Authorization: `Bearer ${token}` } });
-                if (!res.ok) throw new Error('Failed to fetch project');
+                const res = await fetch(`/project/${projectId}`, { headers: { Authorization: `Bearer ${token}` } });
+                if (!res.ok) {
+                    throw new Error('Failed to fetch project');
+                }
                 const project = await res.json();
 
                 // Assuming you have inputs for editing project details:
@@ -213,7 +215,7 @@ function renderProjectList(projects) {
             }
 
             try {
-                const resp = await fetch(`/admin/projects/${projectId}`, {
+                const resp = await fetch(`/project/${projectId}`, {
                     method: 'DELETE',
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
