@@ -1,6 +1,6 @@
 const adminPanel = document.getElementById('adminPanel');
 const searchUser = document.getElementById('searchUser');
-const accessFilter = document.getElementById('accessFilter');
+const userAccessFilter = document.getElementById('userAccessFilter');
 const createdAfter = document.getElementById('createdAfter');
 const createdBefore = document.getElementById('createdBefore');
 const userList = document.getElementById('userList');
@@ -11,6 +11,43 @@ const filterProjectsBtn = document.getElementById('filterProjectsBtn');
 
 const saveUserEdit = document.getElementById('saveUserEdit');
 const cancelUserEdit = document.getElementById('cancelEditBtn');
+
+// Filling categories
+const projectCategoryFilter = document.getElementById("projectCategoryFilter");
+for (const key in ProjectCategory) {
+    if (ProjectCategory.hasOwnProperty(key)) {
+        const value = ProjectCategory[key];
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = value.replace(/_/g, ' ');
+        projectCategoryFilter.appendChild(option);
+    }
+}
+const projectStatusFilter = document.getElementById("projectStatusFilter");
+for (const key in ProjectStatus) {
+    if (ProjectStatus.hasOwnProperty(key)) {
+        const value = ProjectStatus[key];
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = value;
+        projectStatusFilter.appendChild(option);
+    }
+}
+// userAccessFilter
+for (const key in AccessLevel) {
+    if (AccessLevel.hasOwnProperty(key)) {
+        const value = AccessLevel[key];
+        // We dont add 'Guest' to admin panel
+        if(value === "Guest") {
+            continue;
+        }
+
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = value;
+        userAccessFilter.appendChild(option);
+    }
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     // on loaded site
@@ -101,12 +138,12 @@ async function fetchProjects(page = 1) {
         queryParams.append('search', searchValue);
     }
 
-    const categoryValue = categoryFilter.value;
+    const categoryValue = projectCategoryFilter.value;
     if (categoryValue) {
         queryParams.append('category', categoryValue);
     }
 
-    const statusValue = statusFilter.value;
+    const statusValue = projectStatusFilter.value;
     if (statusValue) {
         queryParams.append('status', statusValue);
     }
@@ -162,7 +199,7 @@ function renderProjectList(projects) {
             <td class="px-6 py-4 whitespace-nowrap">${project.id}</td>
             <td class="px-6 py-4 whitespace-nowrap">${project.title}</td>
             <td class="px-6 py-4 whitespace-nowrap">${project.author_id}</td>
-            <td class="px-6 py-4 whitespace-nowrap">${project.category || '-'}</td>
+            <td class="px-6 py-4 whitespace-nowrap">${ProjectCategory[project.category] || '-'}</td>
             <td class="px-6 py-4 whitespace-nowrap">${project.location || '-'}</td>
             <td class="px-6 py-4 whitespace-nowrap capitalize">${ProjectStatus[project.status] || '-'}</td>
             <td class="px-6 py-4 whitespace-nowrap">${new Date(project.created_at).toLocaleDateString()}</td>
@@ -300,7 +337,7 @@ async function fetchUsers(page = 1) {
         queryParams.append('search', searchValue);
     }
 
-    const accessValue = accessFilter.value;
+    const accessValue = userAccessFilter.value;
     if (accessValue) {
         queryParams.append('access', accessValue);
     }

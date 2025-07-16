@@ -52,6 +52,9 @@ func main() {
 	r.GET("/userprofile", func(c *gin.Context) {
 		render(c, "userprofile.html", gin.H{"Title": "User Profile - CityVoice"})
 	})
+	r.GET("/browse_projects", func(c *gin.Context) {
+		render(c, "browse_projects.html", gin.H{"Title": "Browsing Projects - CityVoice"})
+	})
 
 	r.Run(":8080")
 }

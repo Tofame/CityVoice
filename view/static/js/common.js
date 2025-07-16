@@ -14,6 +14,19 @@ const ProjectStatus = {
     5: "Realized"
 };
 
+const ProjectCategory = {
+    0: "Culture and Arts",
+    1: "Healthcare and Social assistance",
+    2: "Community Integration",
+    3: "Greenery and Nature",
+    4: "Education",
+    5: "Sports and Recreation",
+    6: "Public Infrastructure",
+    7: "Road Infrastructure",
+    8: "Environmental Protection",
+    9: "Other"
+};
+
 // Admin Panel config
 let currentUserPage = 1;
 const usersPerPage = 10;

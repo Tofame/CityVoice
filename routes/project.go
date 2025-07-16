@@ -28,11 +28,11 @@ func ProjectRoutes(r *gin.Engine) {
 
 func submitProject(c *gin.Context) {
 	var input struct {
-		Title       string `json:"title" binding:"required"`
-		Description string `json:"description" binding:"required"`
-		Category    string `json:"category" binding:"required"`
-		Location    string `json:"location" binding:"required"`
-		ImageURL    string `json:"image_url"`
+		Title       string                 `json:"title" binding:"required"`
+		Description string                 `json:"description" binding:"required"`
+		Category    models.ProjectCategory `json:"category" binding:"required"`
+		Location    string                 `json:"location" binding:"required"`
+		ImageURL    string                 `json:"image_url"`
 	}
 
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -173,11 +173,11 @@ func updateProject(c *gin.Context) {
 	id := c.Param("id")
 
 	var input struct {
-		Title       string `json:"title"`
-		Description string `json:"description"`
-		Category    string `json:"category"`
-		Location    string `json:"location"`
-		ImageURL    string `json:"image_url"`
+		Title       string                 `json:"title"`
+		Description string                 `json:"description"`
+		Category    models.ProjectCategory `json:"category"`
+		Location    string                 `json:"location"`
+		ImageURL    string                 `json:"image_url"`
 	}
 
 	if err := c.ShouldBindJSON(&input); err != nil {
