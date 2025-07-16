@@ -9,4 +9,4 @@ const (
 	AccessAdmin
 )
 
-// Note - JS script.js has its own map to map access level -> string name
+// Note - JS common.js has its own map to map access level -> string name

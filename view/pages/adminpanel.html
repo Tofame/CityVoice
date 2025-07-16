@@ -1,5 +1,5 @@
 {{ define "content" }}
-<div id="adminPanel" class="hidden max-w-7xl mx-auto px-4 py-10">
+<div id="adminPanel" class="max-w-7xl mx-auto px-4 py-10">
     <h2 class="text-3xl font-extrabold mb-6 text-blue-700 text-center">Admin Panel</h2>
 
     <!-- Users Search and Filters -->
@@ -144,4 +144,8 @@
         </form>
     </div>
 </div>
+{{end}}
+
+{{ define "site_scripts" }}
+<script src="/static/js/adminpanel.js"></script>
 {{end}}

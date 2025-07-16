@@ -470,15 +470,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchProjects(currentUserPage);
     });
 
-    // Event listener for Admin Panel button click
-    nb_adminPanelBtn.onclick = async () => {
-        hideAllContent();
-        adminPanel.classList.remove('hidden');
-        currentUserPage = 1; // Always start at page 1 when opening the admin panel
-        await fetchUsers(currentUserPage);
-        await fetchProjects(currentUserPage);
-    };
-
-    fetchFeaturedProjects();
-    updateUI();
+    currentUserPage = 1; // Always start at page 1 when opening the admin panel
+    fetchUsers(currentUserPage);
+    fetchProjects(currentUserPage);
 });

@@ -15,4 +15,4 @@ func (ps ProjectStatus) String() string {
 	return [...]string{"PENDING", "IN_PROGRESS", "REJECTED", "ACCEPTED", "REALIZED"}[ps]
 }
 
-// Note - JS script.js has its own map
+// Note - JS common.js has its own map

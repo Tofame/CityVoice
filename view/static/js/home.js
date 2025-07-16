@@ -1,7 +1,6 @@
 const newsletterForm = document.getElementById('newsletterForm');
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("Home.js loaded");
     fetchFeaturedProjects();
 });
 

@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("Navigation bar.js loaded");
+    updateNavUI_UserProfile();
 });
 
 const nb_userInfoBtn = document.getElementById('nb_userInfoBtn');
@@ -40,67 +40,87 @@ nb_homeBtns.forEach(homeBtn => {
     });
 });
 
-function goToLink(link) {
+// Admin Panel Button
+nb_adminPanelBtn.onclick = async () => {
+    goToLink('/adminpanel', true)
+};
+
+function goToLink(link, force = false) {
+    if(!force) {
+        if (link === "/userprofile" && nb_userInfoBtn.textContent === "Guest") {
+            return;
+        }
+    }
+
     window.location.href = link;
 }
 
-function showUserProfile(profile) {
-    hideAllContent();
+// User Profile related (the bar needs it for the right side buttons)
+async function fetchUserProfile(token) {
+    try {
+        const response = await fetch('/user/profile', {
+            method: 'GET',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
 
-    // fill fields
-    profileEmail.textContent    = profile.email;
-    profileName.textContent     = profile.name      || '-';
-    profileSurname.textContent = profile.surname  || '-';
-    profileVerified.textContent = profile.is_verified ? 'Yes' : 'No';
-    profileCreated.textContent  = new Date(profile.created_at).toLocaleDateString();
-    profileAccess.textContent   = AccessLevel[profile.access] || "Unknown";
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error('Failed to fetch user profile:', response.status, errorData.error);
+            if (response.status === 401 || response.status === 404) {
+                // Token invalid or user not found, clear token and update UI
+                localStorage.removeItem('token');
+                await updateNavUI_UserProfile();
+            }
+            return null;
+        }
 
-    // show
-    userProfile.classList.remove('hidden');
+        return await response.json();
+    } catch (error) {
+        console.error('Network or parsing error:', error);
+        return null;
+    }
 }
 
-async function updateUI() {
+async function updateNavUI_UserProfile() {
     const token = localStorage.getItem('token');
 
-    // Hide admin panel button
+    // Always hide admin button initially
     nb_adminPanelBtn.classList.add("hidden");
 
-    if (token) {
-        const userProfile = await fetchUserProfile(token);
-        let showProfile = false;
-        if (userProfile) {
-            // Setting name (and surname if available)
-            if(userProfile.name && userProfile.name.trim() !== "") {
-                var tmpText = userProfile.name;
-                if(userProfile.surname && userProfile.surname.trim() !== "") {
-                    tmpText += " " + userProfile.surname;
-                }
-                nb_userInfoBtn.textContent = tmpText;
-                showProfile = true;
-                // Name not available, setting user id
-            } else if(userProfile.user_id) {
-                nb_userInfoBtn.textContent = 'User ' + userProfile.user_id;
-                showProfile = true;
-                // There is profile but neither ID nor Name (that should never happen, would be a bug)
-            } else {
-                nb_userInfoBtn.textContent = '??? User';
-            }
-        } else {
-            nb_userInfoBtn.textContent = 'Unknown User';
-        }
-        nb_loginBtn.classList.add('hidden');
-        nb_logoutBtn.classList.remove('hidden');
-        if(showProfile === true) {
-            nb_userInfoBtn.click(); // shows user profile basically
-        }
-
-        // Show admin panel button
-        if(AccessLevel[userProfile.access] === "Admin") {
-            nb_adminPanelBtn.classList.remove("hidden");
-        }
-    } else {
+    if (!token) {
+        // Guest state
         nb_userInfoBtn.textContent = 'Guest';
         nb_loginBtn.classList.remove('hidden');
         nb_logoutBtn.classList.add('hidden');
+        return;
+    }
+
+    const userProfile = await fetchUserProfile(token);
+    if (!userProfile) {
+        // Could not fetch user profile (maybe token invalid)
+        nb_userInfoBtn.textContent = 'Unknown User';
+        nb_loginBtn.classList.remove('hidden');
+        nb_logoutBtn.classList.add('hidden');
+        return;
+    }
+
+    // Build user display name
+    let displayName = '??? User';
+    if (userProfile.name?.trim()) {
+        displayName = userProfile.name;
+        if (userProfile.surname?.trim()) {
+            displayName += ' ' + userProfile.surname;
+        }
+    } else if (userProfile.user_id) {
+        displayName = 'User ' + userProfile.user_id;
+    }
+
+    nb_userInfoBtn.textContent = displayName;
+    nb_loginBtn.classList.add('hidden');
+    nb_logoutBtn.classList.remove('hidden');
+
+    // Show admin button if user has admin access
+    if (AccessLevel?.[userProfile.access] === "Admin") {
+        nb_adminPanelBtn.classList.remove("hidden");
     }
 }

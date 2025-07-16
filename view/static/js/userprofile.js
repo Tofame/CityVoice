@@ -1,77 +1,51 @@
+const profileEmail    = document.getElementById('profileEmail');
+const profileName     = document.getElementById('profileName');
+const profileSurname  = document.getElementById('profileSurname');
+const profileVerified = document.getElementById('profileVerified');
+const profileCreated  = document.getElementById('profileCreated');
+const profileAccess   = document.getElementById('profileAccess');
+
 document.addEventListener('DOMContentLoaded', () => {
-    updateUI_UserProfile();
+    showUserProfile();
 });
 
-async function fetchUserProfile(token) {
-    try {
-        const response = await fetch('/user/profile', {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-
-        if (response.ok) {
-            const userProfile = await response.json();
-            return userProfile;
-        } else {
-            const errorData = await response.json();
-            console.error('Failed to fetch user profile:', response.status, errorData.error);
-            if (response.status === 401 || response.status === 404) {
-                localStorage.removeItem('token');
-                updateUI();
-            }
-            throw new Error(errorData.error || 'Failed to fetch user profile');
-        }
-    } catch (error) {
-        console.error('Network or parsing error:', error);
-        return null;
-    }
-}
-
-async function updateUI_UserProfile() {
+async function showUserProfile() {
     const token = localStorage.getItem('token');
 
-    // Hide admin panel button
-    nb_adminPanelBtn.classList.add("hidden");
-
     if (!token) {
-        nb_userInfoBtn.textContent = 'Guest';
-        nb_loginBtn.classList.remove('hidden');
-        nb_logoutBtn.classList.add('hidden');
+        showMessage('Could not load user profile. Please login.', 'error');
+        fillProfileFields(null);
         return;
     }
 
-    const userProfile = await fetchUserProfile(token);
-    let showProfile = false;
-    if (userProfile) {
-        // Setting name (and surname if available)
-        if(userProfile.name && userProfile.name.trim() !== "") {
-            var tmpText = userProfile.name;
-            if(userProfile.surname && userProfile.surname.trim() !== "") {
-                tmpText += " " + userProfile.surname;
-            }
-            nb_userInfoBtn.textContent = tmpText;
-            showProfile = true;
-            // Name not available, setting user id
-        } else if(userProfile.user_id) {
-            nb_userInfoBtn.textContent = 'User ' + userProfile.user_id;
-            showProfile = true;
-            // There is profile but neither ID nor Name (that should never happen, would be a bug)
-        } else {
-            nb_userInfoBtn.textContent = '??? User';
-        }
-    } else {
-        nb_userInfoBtn.textContent = 'Unknown User';
-    }
-    nb_loginBtn.classList.add('hidden');
-    nb_logoutBtn.classList.remove('hidden');
-    if(showProfile === true) {
-        nb_userInfoBtn.click(); // shows user profile basically
+    const profile = await fetchUserProfile(token);
+    if (!profile) {
+        showMessage('Failed to load user profile.', 'error');
+        fillProfileFields(null);
+        return;
     }
 
-    // Show admin panel button
-    if(AccessLevel[userProfile.access] === "Admin") {
-        nb_adminPanelBtn.classList.remove("hidden");
+    fillProfileFields(profile);
+}
+
+function fillProfileFields(profile) {
+    if (!profile) {
+        profileEmail.textContent = '-';
+        profileName.textContent = '-';
+        profileSurname.textContent = '-';
+        profileVerified.textContent = '-';
+        profileCreated.textContent = '-';
+        profileAccess.textContent = '-';
+        return;
     }
+
+    profileEmail.textContent = profile.email || '-';
+    profileName.textContent = profile.name || '-';
+    profileSurname.textContent = profile.surname || '-';
+    profileVerified.textContent = profile.is_verified ? 'Yes' : 'No';
+    profileCreated.textContent = profile.created_at ? new Date(profile.created_at).toLocaleDateString() : '-';
+    profileAccess.textContent = AccessLevel?.[profile.access] || "Unknown";
+
+    // Not needed currently since navigation_bar is loading every page change
+    //updateNavUI_UserProfile();
 }

@@ -14,7 +14,7 @@ const passwordChecklist = document.getElementById('passwordRequirements');
 const confirmPasswordInput = document.getElementById('confirmPassword');
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("Home.js loaded");
+    // something maybe?
 });
 
 switchToRegisterForm.onclick = () => {
@@ -57,7 +57,7 @@ submitLoginBtn.onclick = async (e) => {
         if (response.ok) {
             localStorage.setItem('token', data.token);
             showMessage('Logged in successfully!', 'success');
-            goToLink('/userprofile');
+            goToLink('/userprofile', true);
         } else {
             showMessage(data.error || 'Invalid email or password.', 'error');
         }
