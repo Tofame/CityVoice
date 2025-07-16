@@ -176,8 +176,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const showLoginForm = () => {
-        hideAllContent();
+        registerForm.classList.add('hidden');
         loginForm.classList.remove('hidden');
+        window.location.href = '/login';
     };
 
     function hideLoginForm() {

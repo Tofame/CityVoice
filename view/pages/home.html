@@ -1,0 +1,75 @@
+{{ define "content" }}
+<div id="mainContent">
+    <main class="max-w-6xl mx-auto px-4 py-10 space-y-16">
+        <section class="text-center">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-blue-700 mb-4">Welcome to CityVoice</h1>
+            <p class="text-lg md:text-xl text-white max-w-2xl mx-auto text-shadow">
+                Empowering citizens to shape their city. Explore ideas, vote on civic projects, and be part of the change.
+            </p>
+            <div class="mt-6">
+                <a href="#" class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-full font-semibold shadow transition">Browse Projects</a>
+            </div>
+        </section>
+
+        <!-- How It Works -->
+        <section id="workflow">
+            <div class="text-center">
+                <h2 class="section-heading">Your opinion matters</h2>
+            </div>
+            <div class="grid md:grid-cols-3 gap-6 text-center">
+                <div class="bg-white p-6 rounded-xl shadow hover:shadow-md transition">
+                    <h3 class="text-xl font-semibold mb-2 text-blue-600">Submit Your Idea</h3>
+                    <p class="text-gray-600">Have an idea to improve your neighborhood? Propose a project and gather support.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow hover:shadow-md transition">
+                    <h3 class="text-xl font-semibold mb-2 text-blue-600">Vote on Projects</h3>
+                    <p class="text-gray-600">Help prioritize what matters most to your community by casting your vote.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow hover:shadow-md transition">
+                    <h3 class="text-xl font-semibold mb-2 text-blue-600">See Real Results</h3>
+                    <p class="text-gray-600">Track funded projects and watch them come to life around your city.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Projects -->
+        <section id="featured_projects">
+            <div class="text-center">
+                <h2 class="section-heading">Recently Popular Projects</h2>
+            </div>
+            <div id="featured_projects_list" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </section>
+
+        <!-- Budget Townsfolk Section -->
+        <section class="max-w-6xl mx-auto px-4 py-12 text-center bg-white rounded-xl shadow-md">
+            <h2 class="mb-12 text-3xl font-extrabold">
+                <span class="text-black">Budget of</span>
+                <span class="ml-3 inline-block bg-blue-700 text-white rounded-lg px-4 py-1">Townsfolk</span>
+            </h2>
+            <div class="flex flex-col md:flex-row md:justify-center md:items-start md:space-x-8 text-left">
+                <p class="mb-4 md:mb-0 text-gray-700 text-lg md:w-1/2">
+                    Thanks to the participatory budget, the residents decide how a portion of [City]’s budget is spent. Every year, [City]’s citizens come up with and submit project ideas, then vote on which ones will be brought to life.
+                </p>
+                <p class="text-gray-700 text-lg md:w-1/2">
+                    This way, the community collectively shapes what will be built in their neighborhoods, across districts, or throughout the entire city. Any resident can propose a project or cast a vote — no official registration or adulthood required.
+                </p>
+            </div>
+        </section>
+
+        <!-- Newsletter Signup -->
+        <section class="bg-white p-8 rounded-xl shadow max-w-xl mx-auto text-center">
+            <h2 class="text-2xl font-bold mb-4 text-blue-700">Stay Informed</h2>
+            <p class="text-gray-600 mb-6">Sign up for our newsletter to receive updates on new projects, voting deadlines, and community success stories.</p>
+            <form id="newsletterForm" class="flex flex-col sm:flex-row items-center gap-4 justify-center">
+                <input type="email" placeholder="Your email address"
+                       class="flex-1 px-4 py-3 rounded-lg border shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                       required />
+                <button type="submit"
+                        class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
+                    Subscribe
+                </button>
+            </form>
+        </section>
+    </main>
+</div>
+{{end}}

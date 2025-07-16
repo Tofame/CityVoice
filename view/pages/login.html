@@ -1,0 +1,60 @@
+{{define "content"}}
+<div id="loginForm" class="hidden">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Login to CityVoice</h2>
+    <div class="mb-4">
+        <label for="loginEmail" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+        <input type="email" id="loginEmail" placeholder="your.email@example.com"
+               class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" />
+    </div>
+    <div class="mb-6">
+        <label for="loginPassword" class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
+        <input type="password" id="loginPassword" placeholder="********"
+               class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" />
+    </div>
+    <button id="submitLoginBtn"
+            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:shadow-outline transition-transform duration-200 transform hover:scale-105">
+        Login
+    </button>
+    <p id="registerPrompt" class="mt-4 text-center text-sm text-blue-700 cursor-pointer hover:underline">
+        Don't have an account? Register now
+    </p>
+</div>
+
+<div id="registerForm" class="hidden">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Register at CityVoice</h2>
+
+    <div class="mb-4">
+        <label for="registerEmail" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+        <input type="email" id="registerEmail" placeholder="your.email@example.com"
+               class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" />
+    </div>
+
+    <div class="mb-2">
+        <label for="registerPassword" class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
+        <input type="password" id="registerPassword" placeholder="********"
+               class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" />
+    </div>
+
+    <ul id="passwordRequirements" class="text-sm text-gray-700 pl-5 mb-4 space-y-1">
+        <li data-check="length">• at least 10 characters</li>
+        <li data-check="lowercase">• one lowercase letter</li>
+        <li data-check="uppercase">• one uppercase letter</li>
+        <li data-check="digit">• one digit</li>
+        <li data-check="special">• one special character</li>
+    </ul>
+
+    <div class="mb-4">
+        <label for="confirmPassword" class="block text-gray-700 text-sm font-bold mb-2">Confirm Password:</label>
+        <input type="password" id="confirmPassword" placeholder="********"
+               class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" />
+    </div>
+
+    <button id="submitRegisterBtn"
+            class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:shadow-outline transition-transform duration-200 transform hover:scale-105">
+        Register
+    </button>
+    <p id="backToLogin" class="mt-4 text-center text-sm text-blue-700 cursor-pointer hover:underline">
+        Already registered? Log-in
+    </p>
+</div>
+{{end}}

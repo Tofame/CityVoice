@@ -15,7 +15,7 @@ body {
 
 #mainContent {
     flex-grow: 1;
-    background-image: url('/view/images/warsaw.jpg');
+    background-image: url('../images/warsaw.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
