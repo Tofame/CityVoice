@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -31,8 +32,8 @@ func submitProject(c *gin.Context) {
 		Title       string                 `json:"title" binding:"required"`
 		Description string                 `json:"description" binding:"required"`
 		Category    models.ProjectCategory `json:"category" binding:"required"`
-		Location    string                 `json:"location" binding:"required"`
-		ImageURL    string                 `json:"image_url"`
+		District    models.ProjectDistrict `json:"district" binding:"required"`
+		ImageURL    *string                `json:"image_url"`
 	}
 
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -50,7 +51,7 @@ func submitProject(c *gin.Context) {
 		Title:       input.Title,
 		Description: input.Description,
 		Category:    input.Category,
-		Location:    input.Location,
+		District:    input.District,
 		ImageURL:    input.ImageURL,
 		Status:      models.PENDING,
 		AuthorID:    userID,
@@ -173,11 +174,12 @@ func updateProject(c *gin.Context) {
 	id := c.Param("id")
 
 	var input struct {
-		Title       string                 `json:"title"`
-		Description string                 `json:"description"`
-		Category    models.ProjectCategory `json:"category"`
-		Location    string                 `json:"location"`
-		ImageURL    string                 `json:"image_url"`
+		Title       string  `json:"title"`
+		Description string  `json:"description"`
+		Category    uint    `json:"category"`
+		District    uint    `json:"district"`
+		Status      uint    `json:"status"`
+		ImageURL    *string `json:"image_url"`
 	}
 
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -193,9 +195,11 @@ func updateProject(c *gin.Context) {
 
 	project.Title = input.Title
 	project.Description = input.Description
-	project.Category = input.Category
-	project.Location = input.Location
+	project.Category = models.ProjectCategory(input.Category)
+	project.District = models.ProjectDistrict(input.District)
+	project.Status = models.ProjectStatus(input.Status)
 	project.ImageURL = input.ImageURL
+	project.UpdatedAt = time.Now()
 
 	if err := database.DB.Save(&project).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update project"})
@@ -204,6 +208,7 @@ func updateProject(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Project updated"})
 }
+
 func changeStatus(c *gin.Context) {
 	id := c.Param("id")
 

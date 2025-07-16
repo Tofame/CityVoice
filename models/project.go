@@ -13,8 +13,8 @@ type Project struct {
 	CreatedAt       time.Time        `json:"created_at"`
 	UpdatedAt       time.Time        `json:"updated_at"`
 	Category        ProjectCategory  `json:"category"`
-	Location        string           `json:"location"`
-	ImageURL        string           `json:"image_url"`
+	District        ProjectDistrict  `json:"district"`
+	ImageURL        *string          `json:"image_url"`
 	ProjectComments []ProjectComment `json:"comments,omitempty" gorm:"foreignKey:ProjectID"`
 }
 

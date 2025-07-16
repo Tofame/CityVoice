@@ -3,7 +3,8 @@ package models
 type ProjectCategory uint
 
 const (
-	Culture_Arts ProjectCategory = iota
+	Unknown_Category ProjectCategory = iota
+	Culture_Arts
 	Health_Social_assistance
 	Community_Integration
 	Greenery_Nature

@@ -9,8 +9,19 @@ const paginationControls = document.getElementById('paginationControls');
 const filterUsersBtn = document.getElementById('filterUsersBtn');
 const filterProjectsBtn = document.getElementById('filterProjectsBtn');
 
-const saveUserEdit = document.getElementById('saveUserEdit');
-const cancelUserEdit = document.getElementById('cancelEditBtn');
+// User Modal
+const saveUserEdit = document.getElementById('saveUserEditBtn');
+const cancelUserEdit = document.getElementById('cancelUserEditBtn');
+const editUserAccessField = document.getElementById('editUserAccess');
+
+// Project Modal
+const saveProjectEdit = document.getElementById('saveProjectEditBtn');
+const cancelProjectEdit = document.getElementById('cancelProjectEditBtn');
+
+const modal_editProjectCategory = document.getElementById('editProjectCategory');
+const modal_editProjectStatus = document.getElementById('editProjectStatus');
+const modal_editProjectDistrict = document.getElementById('editProjectDistrict');
+const modal_editProjectDescription = document.getElementById('editProjectDescription');
 
 // Filling categories
 const projectCategoryFilter = document.getElementById("projectCategoryFilter");
@@ -21,6 +32,7 @@ for (const key in ProjectCategory) {
         option.value = key;
         option.textContent = valueText.replace(/_/g, ' ');
         projectCategoryFilter.appendChild(option);
+        modal_editProjectCategory.appendChild(option);
     }
 }
 const projectStatusFilter = document.getElementById("projectStatusFilter");
@@ -31,13 +43,14 @@ for (const key in ProjectStatus) {
         option.value = key;
         option.textContent = valueText;
         projectStatusFilter.appendChild(option);
+        modal_editProjectStatus.appendChild(option);
     }
 }
 // userAccessFilter
 for (const key in AccessLevel) {
     if (AccessLevel.hasOwnProperty(key)) {
         const valueText = AccessLevel[key];
-        // We dont add 'Guest' to admin panel
+        // We don't add 'Guest' to admin panel
         if(valueText === "Guest") {
             continue;
         }
@@ -46,6 +59,17 @@ for (const key in AccessLevel) {
         option.value = key;
         option.textContent = valueText;
         userAccessFilter.appendChild(option);
+        editUserAccessField.appendChild(option);
+    }
+}
+// modal_editProjectDistrict
+for (const key in ProjectDistrict) {
+    if (ProjectDistrict.hasOwnProperty(key)) {
+        const valueText = ProjectDistrict[key];
+        const option = document.createElement("option");
+        option.value = key;
+        option.textContent = valueText;
+        modal_editProjectDistrict.appendChild(option);
     }
 }
 
@@ -68,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = document.getElementById('editEmail').value.trim();
         const name = document.getElementById('editName').value.trim();
         const surname = document.getElementById('editSurname').value.trim();
-        const access = parseInt(document.getElementById('editAccess').value);
+        const access = parseInt(editUserAccessField.value);
 
         // Basic validation
         if (!email || isNaN(access)) {
@@ -108,6 +132,67 @@ document.addEventListener('DOMContentLoaded', () => {
 
     cancelUserEdit.addEventListener('click', () => {
         document.getElementById('adminPanel_editUserModal').classList.add('hidden');
+    });
+
+    saveProjectEdit.addEventListener('click', async () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            showMessage('You are not authorized to perform this action.', 'error');
+            return;
+        }
+
+        // Get form values
+        const projectId = document.getElementById('editProjectId').value;
+        const title = document.getElementById('editProjectTitle').value.trim();
+        const category = parseInt(modal_editProjectCategory.value);
+        const status = parseInt(modal_editProjectStatus.value);
+        const district = parseInt(modal_editProjectDistrict.value);
+        const description = modal_editProjectDescription.value;
+
+        // Basic validation
+        if (!title || !category || !status || isNaN(district)) {
+            showMessage('Please fill in all required fields correctly.', 'error');
+            return;
+        }
+
+        console.log(title + " " + category + " " + status + " " + district + " faf");
+
+        // TO-DO make image_url editable in admin panel.
+        let image_url = null;
+        try {
+            const response = await fetch(`/api/project/${projectId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    title,
+                    description,
+                    category,
+                    district,
+                    status,
+                    image_url
+                })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                showMessage('Project updated successfully!', 'success');
+                await fetchProjects(currentProjectPage); // Refresh project list
+                document.getElementById('adminPanel_editProjectModal').classList.add('hidden');
+            } else {
+                showMessage(result.error || 'Failed to update project.', 'error');
+            }
+        } catch (error) {
+            console.error('Error updating project:', error);
+            showMessage('Network error. Please try again later.', 'error');
+        }
+    });
+
+    cancelProjectEdit.addEventListener('click', () => {
+        document.getElementById('adminPanel_editProjectModal').classList.add('hidden');
     });
 
     // Event listener for Apply Filters buttons in Admin Panel
@@ -198,9 +283,10 @@ function renderProjectList(projects) {
         row.innerHTML = `
             <td class="px-6 py-4 whitespace-nowrap">${project.id}</td>
             <td class="px-6 py-4 whitespace-nowrap">${project.title}</td>
+            <td class="px-6 py-4 whitespace-nowrap">${trimString(project.description, 15)}</td>
             <td class="px-6 py-4 whitespace-nowrap">${project.author_id}</td>
             <td class="px-6 py-4 whitespace-nowrap">${ProjectCategory[project.category] || '-'}</td>
-            <td class="px-6 py-4 whitespace-nowrap">${project.location || '-'}</td>
+            <td class="px-6 py-4 whitespace-nowrap">${ProjectDistrict[project.district] || '-'}</td>
             <td class="px-6 py-4 whitespace-nowrap capitalize">${ProjectStatus[project.status] || '-'}</td>
             <td class="px-6 py-4 whitespace-nowrap">${new Date(project.created_at).toLocaleDateString()}</td>
             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -226,9 +312,10 @@ function renderProjectList(projects) {
                 // Assuming you have inputs for editing project details:
                 document.getElementById('editProjectId').value = project.id;
                 document.getElementById('editProjectTitle').value = project.title || '';
-                document.getElementById('editProjectCategory').value = project.category || '';
-                document.getElementById('editProjectLocation').value = project.location || '';
-                document.getElementById('editProjectStatus').value = project.status || '';
+                modal_editProjectCategory.value = 1 || '';
+                modal_editProjectDistrict.value = project.district || '';
+                modal_editProjectDescription.value = project.description || '';
+                modal_editProjectStatus.value = project.status || '';
 
                 document.getElementById('adminPanel_editProjectModal').classList.remove('hidden');
             } catch {
@@ -418,7 +505,7 @@ function renderUserList(users) {
                 document.getElementById('editEmail').value = user.email || '';
                 document.getElementById('editName').value = user.name || '';
                 document.getElementById('editSurname').value = user.surname || '';
-                document.getElementById('editAccess').value = user.access;
+                editUserAccessField.value = user.access;
 
                 document.getElementById('adminPanel_editUserModal').classList.remove('hidden');
             } catch {

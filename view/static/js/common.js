@@ -15,21 +15,42 @@ const ProjectStatus = {
 };
 
 const ProjectCategory = {
-    0: "Culture and Arts",
-    1: "Healthcare and Social assistance",
-    2: "Community Integration",
-    3: "Greenery and Nature",
-    4: "Education",
-    5: "Sports and Recreation",
-    6: "Public Infrastructure",
-    7: "Road Infrastructure",
-    8: "Environmental Protection",
-    9: "Other"
+    0: "Unknown Category",
+    1: "Culture and Arts",
+    2: "Healthcare and Social assistance",
+    3: "Community Integration",
+    4: "Greenery and Nature",
+    5: "Education",
+    6: "Sports and Recreation",
+    7: "Public Infrastructure",
+    8: "Road Infrastructure",
+    9: "Environmental Protection",
+    10: "Other"
 };
 
 function getIntKeyByValue(obj, value) {
     return parseInt(Object.keys(obj).find(key => obj[key] === value));
 }
+
+const ProjectDistrict = {
+    0: "Unknown District",
+    1: "Riverside",
+    2: "Northgate",
+    3: "Old Town",
+    4: "Greenfield",
+    5: "Westmoor",
+    6: "Lakeside",
+    7: "Sunset Heights",
+    8: "Hillcrest",
+    9: "Maplewood",
+    10: "Downtown Core",
+    11: "Brookstone",
+    12: "Southbridge",
+    13: "Ironwood",
+    14: "Eastbay",
+    15: "Silvergrove",
+    16: "Crescent Hollow"
+};
 
 // Admin Panel config
 let currentUserPage = 1;
