@@ -58,7 +58,7 @@ function goToLink(link, force = false) {
 // User Profile related (the bar needs it for the right side buttons)
 async function fetchUserProfile(token) {
     try {
-        const response = await fetch('/user/profile', {
+        const response = await fetch('/api/user/profile', {
             method: 'GET',
             headers: { 'Authorization': `Bearer ${token}` }
         });

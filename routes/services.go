@@ -10,7 +10,7 @@ import (
 )
 
 func ServiceRoutes(r *gin.Engine) {
-	user := r.Group("/service")
+	user := r.Group("/api/service")
 	user.POST("/newsletter", signupNewsletter)
 }
 

@@ -16,7 +16,7 @@ newsletterForm.addEventListener('submit', async (e) => {
     }
 
     try {
-        const response = await fetch('/service/newsletter', {
+        const response = await fetch('/api/service/newsletter', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email })
@@ -40,7 +40,7 @@ newsletterForm.addEventListener('submit', async (e) => {
 async function fetchFeaturedProjects() {
     try {
         const statusAcceptedKey = Object.keys(ProjectStatus).find(key => ProjectStatus[key] === "Accepted");
-        const res = await fetch(`/project?page=1&limit=3&order=most_popular_up&status=${statusAcceptedKey}`, {
+        const res = await fetch(`/api/project?page=1&limit=3&order=most_popular_up&status=${statusAcceptedKey}`, {
             method: 'GET'
         });
         const data = await res.json();
@@ -72,7 +72,7 @@ function renderFeaturedProjects(projects) {
         card.innerHTML = `
             <h3 class="project-title">${project.title}</h3>
             <p class="project-description">${trimString(project.description, 90) || 'No description provided.'}</p>
-            <a href="/project/${project.project_id}" class="project-link">View project</a>
+            <a href="/api/project/${project.project_id}" class="project-link">View project</a>
         `;
 
         container.appendChild(card);

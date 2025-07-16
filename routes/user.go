@@ -9,7 +9,7 @@ import (
 )
 
 func UserRoutes(r *gin.Engine) {
-	user := r.Group("/user")
+	user := r.Group("/api/user")
 	user.Use(middleware.RequireJWTAuth())
 	user.GET("/email", getEmail)
 	user.GET("/id", getUserId)

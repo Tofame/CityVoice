@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            const response = await fetch(`/admin/users/${userId}`, {
+            const response = await fetch(`/api/users/${userId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -122,7 +122,7 @@ async function fetchProjects(page = 1) {
     }
 
     try {
-        const response = await fetch(`/project?${queryParams.toString()}`, {
+        const response = await fetch(`/api/project?${queryParams.toString()}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -180,7 +180,7 @@ function renderProjectList(projects) {
             const projectId = e.currentTarget.dataset.projectId;
             const token = localStorage.getItem('token');
             try {
-                const res = await fetch(`/project/${projectId}`, { headers: { Authorization: `Bearer ${token}` } });
+                const res = await fetch(`/api/project/${projectId}`, { headers: { Authorization: `Bearer ${token}` } });
                 if (!res.ok) {
                     throw new Error('Failed to fetch project');
                 }
@@ -215,7 +215,7 @@ function renderProjectList(projects) {
             }
 
             try {
-                const resp = await fetch(`/project/${projectId}`, {
+                const resp = await fetch(`/api/project/${projectId}`, {
                     method: 'DELETE',
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
@@ -316,7 +316,7 @@ async function fetchUsers(page = 1) {
     }
 
     try {
-        const response = await fetch(`/admin/users?${queryParams.toString()}`, {
+        const response = await fetch(`/api/users?${queryParams.toString()}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -373,7 +373,7 @@ function renderUserList(users) {
             const userId = e.currentTarget.dataset.userId;
             const token = localStorage.getItem('token');
             try {
-                const res = await fetch(`/admin/users/${userId}`, { headers: { Authorization: `Bearer ${token}` } });
+                const res = await fetch(`/api/users/${userId}`, { headers: { Authorization: `Bearer ${token}` } });
                 if (!res.ok) throw new Error('Failed to fetch user');
                 const user = await res.json();
 
@@ -406,7 +406,7 @@ function renderUserList(users) {
             }
 
             try {
-                const resp = await fetch(`/admin/users/${userId}`, {
+                const resp = await fetch(`/api/users/${userId}`, {
                     method: 'DELETE',
                     headers: { 'Authorization': `Bearer ${token}` }
                 });

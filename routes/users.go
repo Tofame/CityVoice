@@ -12,15 +12,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func AdminRoutes(r *gin.Engine) {
-	user := r.Group("/admin")
+func UsersRoutes(r *gin.Engine) {
+	user := r.Group("/api/users")
 	user.Use(middleware.RequireJWTAuth(), middleware.RequireAccess(models.AccessAdmin))
 
-	user.GET("/users/:id", getUserProfileByID)
-	user.GET("/users", getAllUsers)
+	user.GET("/:id", getUserProfileByID)
+	user.GET("", getAllUsers)
 
-	user.PUT("/users/:id", updateUserByID)
-	user.DELETE("/users/:id", deleteUserByID)
+	user.PUT("/:id", updateUserByID)
+	user.DELETE("/:id", deleteUserByID)
 }
 
 func getUserProfileByID(c *gin.Context) {

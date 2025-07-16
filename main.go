@@ -29,9 +29,9 @@ func main() {
 	r.Static("/static", "./view/static")
 
 	routes.AuthRoutes(r)
-	routes.UserRoutes(r)
 	routes.ServiceRoutes(r)
-	routes.AdminRoutes(r)
+	routes.UserRoutes(r)
+	routes.UsersRoutes(r)
 	routes.ProjectRoutes(r)
 
 	r.GET("/", func(c *gin.Context) {

@@ -12,7 +12,7 @@ import (
 )
 
 func ProjectRoutes(r *gin.Engine) {
-	project := r.Group("/project")
+	project := r.Group("/api/project")
 
 	project.GET("/:id", getProjectByID)
 	project.GET("", getProjects)
