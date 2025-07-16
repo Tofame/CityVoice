@@ -1,49 +1,9 @@
-const AccessLevel = {
-    0: "Guest",
-    1: "Normal User",
-    2: "Moderator",
-    3: "Admin"
-};
-
-const ProjectStatus = {
-    0: "Pending",
-    1: "Rejected",
-    2: "Accepted",
-    3: "In Progress",
-    4: "Cancelled",
-    5: "Realized"
-};
-
-// Admin Panel config
-let currentPage = 1;
-const usersPerPage = 10;
-let currentProjectPage = 1;
-const projectsPerPage = 10;
-
-// Helper method to trim string
-function trimString(text, maxLength = 30) {
-    if (!text) return null;
-    return text.length > maxLength ? text.slice(0, maxLength) + '…' : text;
-}
-
 document.addEventListener('DOMContentLoaded', () => {
-    // Main buttons on navbar left side
-    const homeLink = document.getElementById('homeLink');
-
-    // Main Page Stuff
-    const mainContent = document.getElementById('mainContent');
-
-    const newsletterForm = document.getElementById('newsletterForm');
-
-    const userInfoSpan = document.getElementById('user-info');
-    const loginBtn = document.getElementById('loginBtn');
-    const logoutBtn = document.getElementById('logoutBtn');
     const loginForm = document.getElementById('loginForm');
     const submitLoginBtn = document.getElementById('submitLoginBtn');
     const emailInput = document.getElementById('loginEmail');
     const passwordInput = document.getElementById('loginPassword');
 
-    const adminPanelBtn = document.getElementById('adminPanelBtn');
     // Admin Panel Elements
     const adminPanel = document.getElementById('adminPanel');
     const searchUser = document.getElementById('searchUser');
@@ -61,34 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const passwordChecklist = document.getElementById('passwordRequirements');
     const confirmPasswordInput = document.getElementById('confirmPassword');
 
-    const registerPrompt = document.getElementById('registerPrompt');
-    const backToLogin = document.getElementById('backToLogin');
-
     // User Profile
     const userProfileDiv = document.getElementById('userProfile');
-
-    const messageBox = document.getElementById('messageBox');
-    const messageText = document.getElementById('messageText');
-
-    function showMessage(message, type = 'info') {
-        messageText.textContent = message;
-        messageBox.classList.remove('bg-green-600', 'bg-red-600', 'bg-blue-600', 'text-white', 'hidden', 'translate-y-full', 'opacity-0');
-        messageBox.classList.add('fixed', 'bottom-5', 'right-5', 'px-6', 'py-3', 'rounded-lg', 'shadow-xl', 'transition-all', 'duration-300', 'transform', 'z-50');
-
-        if (type === 'success') messageBox.classList.add('bg-green-600');
-        else if (type === 'error') messageBox.classList.add('bg-red-600');
-        else messageBox.classList.add('bg-blue-600');
-
-        messageBox.classList.add('text-white');
-        messageBox.classList.remove('translate-y-full', 'opacity-0', 'hidden');
-        messageBox.classList.add('translate-y-0', 'opacity-100');
-
-        setTimeout(() => {
-            messageBox.classList.remove('translate-y-0', 'opacity-100');
-            messageBox.classList.add('translate-y-full', 'opacity-0');
-            setTimeout(() => messageBox.classList.add('hidden'), 300);
-        }, 3000);
-    }
 
     async function fetchUserProfile(token) {
         try {
@@ -114,55 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error('Network or parsing error:', error);
             return null;
-        }
-    }
-
-    async function updateUI() {
-        const token = localStorage.getItem('token');
-
-        // Hide admin panel button
-        adminPanelBtn.classList.add("hidden");
-
-        if (token) {
-            const userProfile = await fetchUserProfile(token);
-            let showProfile = false;
-            if (userProfile) {
-                // Setting name (and surname if available)
-                if(userProfile.name && userProfile.name.trim() !== "") {
-                    var tmpText = userProfile.name;
-                    if(userProfile.surname && userProfile.surname.trim() !== "") {
-                        tmpText += " " + userProfile.surname;
-                    }
-                    userInfoSpan.textContent = tmpText;
-                    showProfile = true;
-                // Name not available, setting user id
-                } else if(userProfile.user_id) {
-                    userInfoSpan.textContent = 'User ' + userProfile.user_id;
-                    showProfile = true;
-                // There is profile but neither ID nor Name (that should never happen, would be a bug)
-                } else {
-                    userInfoSpan.textContent = '??? User';
-                }
-            } else {
-                userInfoSpan.textContent = 'Unknown User';
-            }
-            loginBtn.classList.add('hidden');
-            logoutBtn.classList.remove('hidden');
-            if(showProfile == true) {
-                userInfoSpan.click(); // shows user profile basically
-            } else {
-                showMainContent(); // we are Guest so lets go to main content
-            }
-
-            // Show admin panel button
-            if(AccessLevel[userProfile.access] == "Admin") {
-                adminPanelBtn.classList.remove("hidden");
-            }
-        } else {
-            userInfoSpan.textContent = 'Guest';
-            loginBtn.classList.remove('hidden');
-            logoutBtn.classList.add('hidden');
-            showMainContent(); // we are Guest so lets go to main content
         }
     }
 
@@ -193,28 +78,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function hideRegisterForm() {
         setTimeout(() => registerForm.classList.add('hidden'), 300);
     }
-
-    const showMainContent = () => {
-        registerForm.classList.add('hidden');
-        loginForm.classList.add('hidden');
-        userProfileDiv.classList.add('hidden');
-        mainContent.classList.remove('hidden');
-    };
-
-    loginBtn.onclick = () => {
-        showLoginForm();
-    };
-
-    logoutBtn.onclick = () => {
-        localStorage.removeItem('token');
-        updateUI();
-        showMessage('Logged out successfully!', 'info');
-        showMainContent();
-    };
-
-    homeLink.addEventListener('click', (e) => {
-        showMainContent();
-    });
 
     submitLoginBtn.onclick = async () => {
         const email = emailInput.value.trim();
@@ -345,88 +208,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 event.preventDefault();
                 submitRegisterBtn.click();
             }
-        });
-    });
-
-    registerPrompt.onclick = () => {
-        hideLoginForm();
-        showRegisterForm();
-    };
-
-    backToLogin.onclick = () => {
-        hideRegisterForm();
-        showLoginForm();
-    };
-
-    newsletterForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const emailInput = newsletterForm.querySelector('input[type="email"]');
-        const email = emailInput.value.trim();
-
-        if (!email) {
-            showMessage('Please enter a valid email address.', 'error');
-            return;
-        }
-
-        try {
-            const response = await fetch('/service/newsletter', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email })
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                showMessage(data.message || 'Thanks for your interest! Check your email to confirm.', 'success');
-                emailInput.value = '';
-            } else {
-                // backend always returns 200 on duplicate—but handle generic failure just in case
-                showMessage(data.error || 'Signup failed. Please try again later.', 'error');
-            }
-
-        } catch (error) {
-            showMessage('Network error. Please try again later.', 'error');
-        }
-    });
-
-    function showUserProfile(profile) {
-        hideAllContent();
-
-        // fill fields
-        profileEmail.textContent    = profile.email;
-        profileName.textContent     = profile.name      || '-';
-        profileSurname.textContent = profile.surname  || '-';
-        profileVerified.textContent = profile.is_verified ? 'Yes' : 'No';
-        profileCreated.textContent  = new Date(profile.created_at).toLocaleDateString();
-        profileAccess.textContent   = AccessLevel[profile.access] || "Unknown";
-
-        // show
-        userProfile.classList.remove('hidden');
-    }
-
-    userInfoSpan.addEventListener('click', async () => {
-        const token = localStorage.getItem('token');
-        if (!token) return; // probably a guest
-
-        const profile = await fetchUserProfile(token);
-        if (profile) showUserProfile(profile);
-    });
-
-    // Home Button
-    document.querySelectorAll('.home-link').forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            // Hide all other sections
-            hideAllContent();
-            mainContent.classList.remove('hidden');
-
-            // Decision whether to keep it here or not, good for refreshing, so may stay I guess?
-            fetchFeaturedProjects();
-
-            // Scroll to top
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     });
 
@@ -586,7 +367,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function renderProjectPagination(totalProjects, currentPage, limit) {
+    function renderProjectPagination(totalProjects, currentUserPage, limit) {
         paginationControls_Projects.innerHTML = '';
         const totalPages = Math.ceil(totalProjects / limit);
 
@@ -596,7 +377,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const button = document.createElement('button');
             button.textContent = text;
             button.classList.add('px-4', 'py-2', 'rounded-md', 'border');
-            if (page === currentPage) {
+            if (page === currentUserPage) {
                 button.classList.add('bg-blue-600', 'text-white', 'border-blue-600');
             } else {
                 button.classList.add('bg-white', 'text-blue-600', 'border-gray-300', 'hover:bg-blue-50');
@@ -608,12 +389,12 @@ document.addEventListener('DOMContentLoaded', () => {
             return button;
         };
 
-        if (currentPage > 1) {
-            paginationControls_Projects.appendChild(createPageButton(currentPage - 1, 'Previous'));
+        if (currentUserPage > 1) {
+            paginationControls_Projects.appendChild(createPageButton(currentUserPage - 1, 'Previous'));
         }
 
         const maxPageButtons = 5;
-        let startPage = Math.max(1, currentPage - Math.floor(maxPageButtons / 2));
+        let startPage = Math.max(1, currentUserPage - Math.floor(maxPageButtons / 2));
         let endPage = Math.min(totalPages, startPage + maxPageButtons - 1);
 
         if (endPage - startPage + 1 < maxPageButtons) {
@@ -624,8 +405,8 @@ document.addEventListener('DOMContentLoaded', () => {
             paginationControls_Projects.appendChild(createPageButton(i));
         }
 
-        if (currentPage < totalPages) {
-            paginationControls_Projects.appendChild(createPageButton(currentPage + 1, 'Next'));
+        if (currentUserPage < totalPages) {
+            paginationControls_Projects.appendChild(createPageButton(currentUserPage + 1, 'Next'));
         }
     }
 
@@ -761,7 +542,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     if (resp.ok) {
                         showMessage(result.message || 'User deleted.', 'success');
-                        fetchUsers(currentPage);        // refresh current list / page
+                        fetchUsers(currentUserPage);        // refresh current list / page
                     } else {
                         // 401 / 403: token expired or lost admin rights, so force logout
                         if (resp.status === 401 || resp.status === 403) {
@@ -778,7 +559,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function renderPagination(totalUsers, currentPage, limit) {
+    function renderPagination(totalUsers, currentUserPage, limit) {
         paginationControls.innerHTML = '';
         const totalPages = Math.ceil(totalUsers / limit);
 
@@ -788,26 +569,26 @@ document.addEventListener('DOMContentLoaded', () => {
             const button = document.createElement('button');
             button.textContent = text;
             button.classList.add('px-4', 'py-2', 'rounded-md', 'border');
-            if (page === currentPage) {
+            if (page === currentUserPage) {
                 button.classList.add('bg-blue-600', 'text-white', 'border-blue-600');
             } else {
                 button.classList.add('bg-white', 'text-blue-600', 'border-gray-300', 'hover:bg-blue-50');
                 button.addEventListener('click', () => {
-                    currentPage = page;
-                    fetchUsers(currentPage);
+                    currentUserPage = page;
+                    fetchUsers(currentUserPage);
                 });
             }
             return button;
         };
 
         // Previous button
-        if (currentPage > 1) {
-            paginationControls.appendChild(createPageButton(currentPage - 1, 'Previous'));
+        if (currentUserPage > 1) {
+            paginationControls.appendChild(createPageButton(currentUserPage - 1, 'Previous'));
         }
 
         // Page numbers (simple approach for now, can be enhanced for many pages)
         const maxPageButtons = 5; // Show a maximum of 5 page buttons
-        let startPage = Math.max(1, currentPage - Math.floor(maxPageButtons / 2));
+        let startPage = Math.max(1, currentUserPage - Math.floor(maxPageButtons / 2));
         let endPage = Math.min(totalPages, startPage + maxPageButtons - 1);
 
         if (endPage - startPage + 1 < maxPageButtons) {
@@ -819,8 +600,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Next button
-        if (currentPage < totalPages) {
-            paginationControls.appendChild(createPageButton(currentPage + 1, 'Next'));
+        if (currentUserPage < totalPages) {
+            paginationControls.appendChild(createPageButton(currentUserPage + 1, 'Next'));
         }
     }
 
@@ -865,7 +646,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (response.ok) {
                 showMessage('User updated successfully!', 'success');
                 document.getElementById('adminPanel_editUserModal').classList.add('hidden');
-                fetchUsers(currentPage); // Refresh the user list
+                fetchUsers(currentUserPage); // Refresh the user list
             } else {
                 showMessage(result.error || 'Failed to update user.', 'error');
             }
@@ -883,21 +664,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Event listener for Apply Filters buttons in Admin Panel
     filterUsersBtn.addEventListener('click', () => {
-        currentPage = 1; // Reset to first page on filter change
-        fetchUsers(currentPage);
+        currentUserPage = 1; // Reset to first page on filter change
+        fetchUsers(currentUserPage);
     });
     filterProjectsBtn.addEventListener('click', () => {
-        currentPage = 1; // Reset to first page on filter change
-        fetchProjects(currentPage);
+        currentUserPage = 1; // Reset to first page on filter change
+        fetchProjects(currentUserPage);
     });
 
     // Event listener for Admin Panel button click
-    adminPanelBtn.onclick = async () => {
+    nb_adminPanelBtn.onclick = async () => {
         hideAllContent();
         adminPanel.classList.remove('hidden');
-        currentPage = 1; // Always start at page 1 when opening the admin panel
-        await fetchUsers(currentPage);
-        await fetchProjects(currentPage);
+        currentUserPage = 1; // Always start at page 1 when opening the admin panel
+        await fetchUsers(currentUserPage);
+        await fetchProjects(currentUserPage);
     };
 
     // ========== Home Page

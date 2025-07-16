@@ -20,10 +20,10 @@
       </div>
 
       <div class="flex items-center space-x-4">
-        <button id="adminPanelBtn" class="hidden text-white bg-red-600 hover:bg-red-700 font-medium px-3 py-1 rounded-full">Admin Panel</button>
-        <button id="user-info" class="text-white font-medium px-3 py-1 rounded-full bg-white bg-opacity-20">Guest</button>
-        <button id="loginBtn" class="bg-white text-blue-700 px-4 py-2 rounded-full font-bold shadow hover:bg-blue-100 transition-all duration-200">Login</button>
-        <button id="logoutBtn" class="hidden bg-red-500 text-white px-4 py-2 rounded-full font-bold shadow hover:bg-red-600 transition-all duration-200">Logout</button>
+        <button id="nb_adminPanelBtn" class="hidden text-white bg-red-600 hover:bg-red-700 font-medium px-3 py-1 rounded-full">Admin Panel</button>
+        <button id="nb_userInfoBtn" class="text-white font-medium px-3 py-1 rounded-full bg-white bg-opacity-20">Guest</button>
+        <button id="nb_loginBtn" class="bg-white text-blue-700 px-4 py-2 rounded-full font-bold shadow hover:bg-blue-100 transition-all duration-200">Login</button>
+        <button id="nb_logoutBtn" class="hidden bg-red-500 text-white px-4 py-2 rounded-full font-bold shadow hover:bg-red-600 transition-all duration-200">Logout</button>
       </div>
     </nav>
     <div class="content">
@@ -32,44 +32,47 @@
         {{end}}
     </div>
 
-    <script src="/static/js/script.js"></script>
+    <footer class="bg-gradient-to-r from-blue-700 to-purple-800 text-white pt-10 pb-6 px-6 mt-auto rounded-t-xl shadow-inner">
+      <div class="max-w-6xl mx-auto flex flex-col md:flex-row md:items-start justify-between gap-8">
+        <div class="w-full md:w-1/4 flex flex-col items-center text-center">
+          <h3 class="text-lg font-semibold mb-3">Quick Links</h3>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/" class="home-link hover:underline">Home</a></li>
+            <li><a href="#" class="hover:underline">Browse Projects</a></li>
+            <li><a href="#" class="hover:underline">Realised Projects</a></li>
+            <li><a href="#" class="hover:underline">Know More</a></li>
+          </ul>
+        </div>
+
+        <div class="w-full md:w-1/2 flex flex-col items-center text-center">
+          <img src="/static/images/cityvoice_circle.png" alt="CityVoice Logo" class="w-20 h-20 mb-3" />
+          <h2 class="text-2xl font-extrabold tracking-wide">CityVoice</h2>
+          <p class="mt-3 text-sm text-gray-200 max-w-xs">
+            Empowering citizens to shape the future of their city. Join the voice of the people.
+          </p>
+        </div>
+
+        <div class="w-full md:w-1/4 flex flex-col items-center text-center">
+          <h3 class="text-lg font-semibold mb-3">Community</h3>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#" class="hover:underline">Submit Idea</a></li>
+            <li><a href="#" class="hover:underline">Newsletter</a></li>
+            <li><a href="#" class="hover:underline">Get Involved</a></li>
+            <li><a href="#" class="hover:underline">Contact Us</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="mt-10 border-t border-blue-300 pt-4 text-center text-sm text-gray-200">
+        © 2025 CityVoice. All rights reserved.
+      </div>
+    </footer>
+
+    <script src="/static/js/common.js"></script>
+    <script src="/static/js/navigation_bar.js"></script>
+    {{block "site_scripts" .}}{{end}}
   </body>
-  <footer class="bg-gradient-to-r from-blue-700 to-purple-800 text-white pt-10 pb-6 px-6 mt-auto rounded-t-xl shadow-inner">
-    <div class="max-w-6xl mx-auto flex flex-col md:flex-row md:items-start justify-between gap-8">
-      <div class="w-full md:w-1/4 flex flex-col items-center text-center">
-        <h3 class="text-lg font-semibold mb-3">Quick Links</h3>
-        <ul class="space-y-2 text-sm">
-          <li><a href="/" class="home-link hover:underline">Home</a></li>
-          <li><a href="#" class="hover:underline">Browse Projects</a></li>
-          <li><a href="#" class="hover:underline">Realised Projects</a></li>
-          <li><a href="#" class="hover:underline">Know More</a></li>
-        </ul>
-      </div>
-
-      <div class="w-full md:w-1/2 flex flex-col items-center text-center">
-        <img src="/static/images/cityvoice_circle.png" alt="CityVoice Logo" class="w-20 h-20 mb-3" />
-        <h2 class="text-2xl font-extrabold tracking-wide">CityVoice</h2>
-        <p class="mt-3 text-sm text-gray-200 max-w-xs">
-          Empowering citizens to shape the future of their city. Join the voice of the people.
-        </p>
-      </div>
-
-      <div class="w-full md:w-1/4 flex flex-col items-center text-center">
-        <h3 class="text-lg font-semibold mb-3">Community</h3>
-        <ul class="space-y-2 text-sm">
-          <li><a href="#" class="hover:underline">Submit Idea</a></li>
-          <li><a href="#" class="hover:underline">Newsletter</a></li>
-          <li><a href="#" class="hover:underline">Get Involved</a></li>
-          <li><a href="#" class="hover:underline">Contact Us</a></li>
-        </ul>
-      </div>
-
-    </div>
-
-    <div class="mt-10 border-t border-blue-300 pt-4 text-center text-sm text-gray-200">
-      © 2025 CityVoice. All rights reserved.
-    </div>
-  </footer>
 
   <div id="messageBox" class="hidden fixed bottom-5 left-1/2 bg-blue-600 text-white px-6 py-3 rounded-lg shadow-xl transition-all duration-300 transform -translate-x-1/2 translate-y-full opacity-0 z-50 inline-block max-w-max">
     <p id="messageText"></p>

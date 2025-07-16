@@ -15,7 +15,7 @@
             class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:shadow-outline transition-transform duration-200 transform hover:scale-105">
         Login
     </button>
-    <p id="registerPrompt" class="mt-4 text-center text-sm text-blue-700 cursor-pointer hover:underline">
+    <p id="switchToRegisterForm" class="mt-4 text-center text-sm text-blue-700 cursor-pointer hover:underline">
         Don't have an account? Register now
     </p>
 </div>
@@ -53,8 +53,12 @@
             class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:shadow-outline transition-transform duration-200 transform hover:scale-105">
         Register
     </button>
-    <p id="backToLogin" class="mt-4 text-center text-sm text-blue-700 cursor-pointer hover:underline">
+    <p id="switchToLoginForm" class="mt-4 text-center text-sm text-blue-700 cursor-pointer hover:underline">
         Already registered? Log-in
     </p>
 </div>
+{{end}}
+
+{{ define "site_scripts" }}
+<script src="/static/js/login.js"></script>
 {{end}}
