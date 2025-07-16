@@ -174,12 +174,12 @@ func updateProject(c *gin.Context) {
 	id := c.Param("id")
 
 	var input struct {
-		Title       string  `json:"title"`
-		Description string  `json:"description"`
-		Category    uint    `json:"category"`
-		District    uint    `json:"district"`
-		Status      uint    `json:"status"`
-		ImageURL    *string `json:"image_url"`
+		Title       string                 `json:"title"`
+		Description string                 `json:"description"`
+		Category    models.ProjectCategory `json:"category"`
+		District    models.ProjectDistrict `json:"district"`
+		Status      models.ProjectStatus   `json:"status"`
+		ImageURL    *string                `json:"image_url"`
 	}
 
 	if err := c.ShouldBindJSON(&input); err != nil {
