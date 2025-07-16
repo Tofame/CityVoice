@@ -16,35 +16,35 @@ const cancelUserEdit = document.getElementById('cancelEditBtn');
 const projectCategoryFilter = document.getElementById("projectCategoryFilter");
 for (const key in ProjectCategory) {
     if (ProjectCategory.hasOwnProperty(key)) {
-        const value = ProjectCategory[key];
+        const valueText = ProjectCategory[key];
         const option = document.createElement("option");
-        option.value = value;
-        option.textContent = value.replace(/_/g, ' ');
+        option.value = key;
+        option.textContent = valueText.replace(/_/g, ' ');
         projectCategoryFilter.appendChild(option);
     }
 }
 const projectStatusFilter = document.getElementById("projectStatusFilter");
 for (const key in ProjectStatus) {
     if (ProjectStatus.hasOwnProperty(key)) {
-        const value = ProjectStatus[key];
+        const valueText = ProjectStatus[key];
         const option = document.createElement("option");
-        option.value = value;
-        option.textContent = value;
+        option.value = key;
+        option.textContent = valueText;
         projectStatusFilter.appendChild(option);
     }
 }
 // userAccessFilter
 for (const key in AccessLevel) {
     if (AccessLevel.hasOwnProperty(key)) {
-        const value = AccessLevel[key];
+        const valueText = AccessLevel[key];
         // We dont add 'Guest' to admin panel
-        if(value === "Guest") {
+        if(valueText === "Guest") {
             continue;
         }
 
         const option = document.createElement("option");
-        option.value = value;
-        option.textContent = value;
+        option.value = key;
+        option.textContent = valueText;
         userAccessFilter.appendChild(option);
     }
 }
@@ -138,7 +138,7 @@ async function fetchProjects(page = 1) {
         queryParams.append('search', searchValue);
     }
 
-    const categoryValue = getIntKeyByValue(ProjectCategory, projectCategoryFilter.value);
+    const categoryValue = projectCategoryFilter.value;
     if (categoryValue) {
         queryParams.append('category', categoryValue);
     }
@@ -337,7 +337,7 @@ async function fetchUsers(page = 1) {
         queryParams.append('search', searchValue);
     }
 
-    const accessValue = getIntKeyByValue(AccessLevel, userAccessFilter.value);
+    const accessValue = userAccessFilter.value;
     if (accessValue) {
         queryParams.append('access', accessValue);
     }
