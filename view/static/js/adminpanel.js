@@ -138,7 +138,7 @@ async function fetchProjects(page = 1) {
         queryParams.append('search', searchValue);
     }
 
-    const categoryValue = projectCategoryFilter.value;
+    const categoryValue = getIntKeyByValue(ProjectCategory, projectCategoryFilter.value);
     if (categoryValue) {
         queryParams.append('category', categoryValue);
     }
@@ -337,7 +337,7 @@ async function fetchUsers(page = 1) {
         queryParams.append('search', searchValue);
     }
 
-    const accessValue = userAccessFilter.value;
+    const accessValue = getIntKeyByValue(AccessLevel, userAccessFilter.value);
     if (accessValue) {
         queryParams.append('access', accessValue);
     }

@@ -39,7 +39,7 @@ newsletterForm.addEventListener('submit', async (e) => {
 
 async function fetchFeaturedProjects() {
     try {
-        const statusAcceptedKey = Object.keys(ProjectStatus).find(key => ProjectStatus[key] === "Accepted");
+        const statusAcceptedKey = getIntKeyByValue(ProjectStatus, "Accepted");
         const res = await fetch(`/api/project?page=1&limit=3&order=most_popular_up&status=${statusAcceptedKey}`, {
             method: 'GET'
         });

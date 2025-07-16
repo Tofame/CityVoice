@@ -27,6 +27,10 @@ const ProjectCategory = {
     9: "Other"
 };
 
+function getIntKeyByValue(obj, value) {
+    return parseInt(Object.keys(obj).find(key => obj[key] === value));
+}
+
 // Admin Panel config
 let currentUserPage = 1;
 const usersPerPage = 10;
