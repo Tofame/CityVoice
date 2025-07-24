@@ -1,0 +1,52 @@
+{{ define "site_scripts" }}
+<script src="/static/js/browse_projects.js"></script>
+{{end}}
+
+{{define "content"}}
+<div class="max-w-6xl mx-auto px-4 py-6">
+    <!-- Search and Filters -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+        <div class="flex-1">
+            <input type="text" placeholder="Search projects..." class="w-full px-4 py-2 border rounded shadow-sm">
+        </div>
+        <div class="flex flex-wrap gap-2 mt-2 md:mt-0">
+            <select id="yearFilter" class="px-3 py-2 border rounded">
+                <option disabled selected>Year</option>
+            </select>
+            <select id="districtFilter" class="px-3 py-2 border rounded">
+                <option disabled selected>District</option>
+            </select>
+            <select id="categoriesFilter" class="px-3 py-2 border rounded">
+                <option disabled selected>Category</option>
+            </select>
+            <select id="statusFilter" class="px-3 py-2 border rounded">
+                <option disabled selected>Status</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Project Count + Page Size -->
+    <div class="flex justify-between items-center mb-4 text-sm text-gray-600">
+        <span id="projectsCount">/projects count/</span>
+        <div>
+            <label for="pageSize" class="mr-2">Projects per page:</label>
+            <select id="pageSize" class="border rounded px-2 py-1">
+                <option>10</option>
+                <option selected>30</option>
+                <option>50</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Project List -->
+    <div id="projectsList" class="space-y-4"></div>
+    <div id="noProjects" class="hidden text-center text-gray-500">No projects found.</div>
+
+    <!-- Pagination -->
+    <div class="mt-6 flex justify-center gap-2">
+        <button id="prevPage" class="px-3 py-1 border rounded text-sm text-gray-600 hover:bg-gray-100">Previous</button>
+        <span id="currentPage" class="px-3 py-1 border rounded bg-blue-600 text-white text-sm">1</span>
+        <button id="nextPage" class="px-3 py-1 border rounded text-sm text-gray-600 hover:bg-gray-100">Next</button>
+    </div>
+</div>
+{{end}}

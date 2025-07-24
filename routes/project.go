@@ -112,6 +112,10 @@ func getProjects(c *gin.Context) {
 		query = query.Where("status = ?", status)
 	}
 
+	if district := c.Query("district"); district != "" {
+		query = query.Where("district = ?", district)
+	}
+
 	createdAfter := c.Query("created_after")
 	createdBefore := c.Query("created_before")
 	if createdAfter != "" {

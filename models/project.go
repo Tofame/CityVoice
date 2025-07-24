@@ -14,6 +14,7 @@ type Project struct {
 	UpdatedAt       time.Time        `json:"updated_at"`
 	Category        ProjectCategory  `json:"category"`
 	District        ProjectDistrict  `json:"district"`
+	Cost            uint             `json:"cost" gorm:"default:0"`
 	ImageURL        *string          `json:"image_url"`
 	ProjectComments []ProjectComment `json:"comments,omitempty" gorm:"foreignKey:ProjectID"`
 }
