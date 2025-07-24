@@ -11,8 +11,15 @@ const (
 	REALIZED                  // has been completed
 )
 
-func (ps ProjectStatus) String() string {
-	return [...]string{"PENDING", "IN_PROGRESS", "REJECTED", "ACCEPTED", "REALIZED"}[ps]
+func ProjectStatusMap() map[ProjectStatus]string {
+	return map[ProjectStatus]string{
+		PENDING:     "Pending",
+		REJECTED:    "Rejected",
+		ACCEPTED:    "Accepted",
+		IN_PROGRESS: "In Progress",
+		CANCELLED:   "Cancelled",
+		REALIZED:    "Realized",
+	}
 }
 
 // Note - JS common.js has its own map

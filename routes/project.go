@@ -4,6 +4,7 @@ import (
 	"CityVoice/database"
 	"CityVoice/middleware"
 	"CityVoice/models"
+	"gorm.io/gorm"
 	"net/http"
 	"strconv"
 	"strings"
@@ -18,6 +19,9 @@ func ProjectRoutes(r *gin.Engine) {
 	project.GET("/:id", getProjectByID)
 	project.GET("", getProjects)
 	project.POST("", middleware.RequireJWTAuth(), submitProject)
+
+	project.POST("/:id/comments", middleware.RequireJWTAuth(), submitComment)
+	project.DELETE("/:id/comments/:commentID", middleware.RequireJWTAuth(), deleteComment)
 
 	admin := project.Group("")
 	admin.Use(middleware.RequireJWTAuth(), middleware.RequireAccess(models.AccessAdmin))
@@ -64,11 +68,18 @@ func submitProject(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, project)
 }
+
 func getProjectByID(c *gin.Context) {
 	id := c.Param("id")
 
 	var project models.Project
-	if err := database.DB.Preload("ProjectComments").First(&project, id).Error; err != nil {
+
+	// Fetch project with latest 10 comments
+	if err := database.DB.
+		Preload("ProjectComments", func(db *gorm.DB) *gorm.DB {
+			return db.Order("created_at DESC").Limit(10)
+		}).
+		First(&project, id).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Project not found"})
 		return
 	}
@@ -249,4 +260,100 @@ func deleteProject(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Project deleted"})
+}
+
+func submitComment(c *gin.Context) {
+	// This is taken from api request :id
+	projectIDStr := c.Param("id")
+	projectID, err := strconv.ParseUint(projectIDStr, 10, 32)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid project ID format"})
+		return
+	}
+
+	var input struct {
+		Content string `json:"content" binding:"required"`
+	}
+
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input", "details": err.Error()})
+		return
+	}
+
+	userID, ok := middleware.GetUserID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "User ID not found in context"})
+		return
+	}
+
+	// Verify the project exists and is not PENDING (unless the current user is the author or admin)
+	var project models.Project
+	if err := database.DB.First(&project, projectID).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Project not found"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve project", "details": err.Error()})
+		}
+		return
+	}
+
+	// Only allow commenting on non-pending projects, or if user is author/admin
+	if project.Status == models.PENDING {
+		if !middleware.IsAdmin(c) {
+			if userID != project.AuthorID {
+				c.JSON(http.StatusForbidden, gin.H{"error": "Cannot comment on pending projects"})
+				return
+			}
+		}
+	}
+
+	comment := models.ProjectComment{
+		ProjectID: uint(projectID),
+		UserID:    userID,
+		Content:   input.Content,
+		CreatedAt: time.Now(),
+	}
+
+	if err := database.DB.Create(&comment).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create comment", "details": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, comment)
+}
+
+func deleteComment(c *gin.Context) {
+	commentIDStr := c.Param("commentID")
+	commentID, err := strconv.ParseUint(commentIDStr, 10, 32)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid comment ID format"})
+		return
+	}
+
+	var comment models.ProjectComment
+	if err := database.DB.First(&comment, commentID).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Comment not found"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve comment", "details": err.Error()})
+		}
+		return
+	}
+
+	userID, ok := middleware.GetUserID(c)
+	if !ok || (userID != comment.UserID && !middleware.IsAdmin(c)) {
+		c.JSON(http.StatusForbidden, gin.H{"error": "You are not authorized to delete this comment"})
+		return
+	}
+
+	if err := database.DB.Delete(&models.ProjectComment{}, commentID).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Comment not found"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete comment", "details": err.Error()})
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Comment deleted successfully"})
 }

@@ -2,8 +2,11 @@ package main
 
 import (
 	"CityVoice/database"
+	"CityVoice/models"
 	"CityVoice/routes"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
+	"strconv"
 
 	"html/template"
 	"net/http"
@@ -57,6 +60,38 @@ func main() {
 	})
 	r.GET("/know_more", func(c *gin.Context) {
 		render(c, "know_more.html", gin.H{"Title": "Know More - CityVoice"})
+	})
+
+	r.GET("/projects/:id", func(c *gin.Context) {
+		projectIDStr := c.Param("id")
+		projectID, err := strconv.ParseUint(projectIDStr, 10, 32) // convert to uint, base 10 because 0-9 numbers, 32 because uint32_t
+		if err != nil {
+			// Handle invalid ID format e.g., if someone types /projects/abc
+			render(c, "error.html", gin.H{"Title": "Error", "Message": "Invalid project ID format."})
+			return
+		}
+
+		var project models.Project
+		// Fetch the project from the database
+		if err := database.DB.Preload("ProjectComments").First(&project, projectID).Error; err != nil {
+			if err == gorm.ErrRecordNotFound {
+				render(c, "error.html", gin.H{"Title": "Not Found", "Message": "Project not found."})
+			} else {
+				render(c, "error.html", gin.H{"Title": "Error", "Message": "Failed to retrieve project details."})
+			}
+			return
+		}
+
+		// We pass the data to template, we can later use that inside html. Interesting stuff.
+		data := gin.H{
+			"Title":              "Project Details - " + project.Title,
+			"Project":            project,
+			"ProjectStatusMap":   models.ProjectStatusMap(),
+			"ProjectCategoryMap": models.ProjectCategoryMap(),
+			"ProjectDistrictMap": models.ProjectDistrictMap(),
+		}
+
+		render(c, "project_details.html", data)
 	})
 
 	r.Run(":8080")
