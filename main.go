@@ -55,6 +55,9 @@ func main() {
 	r.GET("/browse_projects", func(c *gin.Context) {
 		render(c, "browse_projects.html", gin.H{"Title": "Browsing Projects - CityVoice"})
 	})
+	r.GET("/know_more", func(c *gin.Context) {
+		render(c, "know_more.html", gin.H{"Title": "Know More - CityVoice"})
+	})
 
 	r.Run(":8080")
 }
