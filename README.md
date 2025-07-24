@@ -47,6 +47,34 @@ It fosters engamenet and awareness of the townsfolk about how their city prosper
 - When run, the app is set to run on port 8080, e.g. http://localhost:8080/?#
 
 ## Images
-<img src="https://github.com/user-attachments/assets/e0fc4ac1-ef5b-40b2-99d3-44762ffe09ea" width="960" alt="website 1"/>
-<img src="https://github.com/user-attachments/assets/3c5c88da-2f61-4e80-a4c9-17414f59999c" width="960" alt="website 3"/>
-<img src="https://github.com/user-attachments/assets/7caf0cca-2731-4ec6-8076-dbfdd5591787" width="959" alt="website 2"/>
+<img src="https://github.com/user-attachments/assets/e0fc4ac1-ef5b-40b2-99d3-44762ffe09ea" width="400" alt="website 1"/>
+<img src="https://github.com/user-attachments/assets/3c5c88da-2f61-4e80-a4c9-17414f59999c" width="400" alt="website 3"/>
+<img src="https://github.com/user-attachments/assets/7caf0cca-2731-4ec6-8076-dbfdd5591787" width="400" alt="website 2"/>
+
+## Dependencies
+
+This project utilizes **Tailwind CSS locally** for styling. To set up and manage the CSS, follow these steps:
+
+1.  **Install Node.js Dependencies:**
+    Navigate to the project's root directory in your terminal and run the following command to install all required Node.js packages:
+
+    ```bash
+    npm install
+    ```
+
+2.  **Manage Tailwind CSS:**
+    Once dependencies are installed, you can generate or update the project's compiled CSS file (`view/static/css/tailwindStyle.css`):
+
+  * **Development Mode (Watch for Changes):**
+    To automatically recompile CSS whenever you modify an HTML file open a separate terminal and run:
+
+      ```bash
+      npm run watch:css
+      ```
+
+  * **Production Build (One-time Compile & Optimize):**
+    To generate a final, optimized, and minified CSS file (recommended before building your Go application for deployment):
+
+      ```bash
+      npm run build:css
+      ```

@@ -27,3 +27,4 @@ pkg/
 *.log
 *.tmp
 *.swp
+/node_modules
