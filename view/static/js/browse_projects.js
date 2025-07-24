@@ -130,12 +130,30 @@ function renderProjects(projects) {
         const districtText = ProjectDistrict[project.district] || 'Unknown District';
         const costText = project.cost !== undefined && project.cost !== null ? project.cost + ' PLN' : '0 PLN';
 
+        const upvotes = project.votes_up || 0;
+        const downvotes = project.votes_down || 0;
+
         projectCard.innerHTML = `
-            <div class="flex-grow">
-                <h3 class="text-xl font-bold text-gray-900 mb-1">${project.title || 'Untitled Project'}</h3>
-                <p class="text-sm text-gray-500 mb-3">${districtText}</p>
-                <p class="text-gray-700 text-sm leading-relaxed mb-4 line-clamp-3">${project.description || 'No description provided.'}</p>
+            <div class="flex justify-between items-center mb-1">
+                <h3 class="text-xl font-bold text-gray-900">${project.title || 'Untitled Project'}</h3>
+                <div class="flex items-center space-x-4 text-sm text-gray-600">
+                    <div class="flex items-center space-x-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                        </svg>
+                        <span>${upvotes}</span>
+                    </div>
+                    <div class="flex items-center space-x-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                        <span>${downvotes}</span>
+                    </div>
+                </div>
             </div>
+            <p class="text-sm text-gray-500 mb-3">${districtText}</p>
+            <p class="text-gray-700 text-sm leading-relaxed mb-4 line-clamp-3">${project.description || 'No description provided.'}</p>
+        
             <div class="flex flex-wrap items-center justify-between gap-3 mt-4 pt-4 border-t border-gray-100">
                 <div class="flex items-center gap-2">
                     <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
