@@ -28,3 +28,4 @@ pkg/
 *.tmp
 *.swp
 /node_modules
+.env

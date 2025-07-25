@@ -5,7 +5,9 @@ import (
 	"CityVoice/models"
 	"CityVoice/routes"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	"gorm.io/gorm"
+	"log"
 	"strconv"
 
 	"html/template"
@@ -26,6 +28,12 @@ func render(c *gin.Context, page string, data gin.H) {
 }
 
 func main() {
+	// Load .env file
+	err := godotenv.Load()
+	if err != nil {
+		log.Println(".env file not found, using system env vars")
+	}
+
 	database.Connect()
 	r := gin.Default()
 
