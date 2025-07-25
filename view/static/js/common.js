@@ -85,3 +85,17 @@ function showMessage(message, type = 'info') {
         setTimeout(() => messageBox.classList.add('hidden'), 300);
     }, 3000);
 }
+
+function getCurrentUserIdFromToken() {
+    const token = localStorage.getItem('token');
+    if (!token) return null;
+
+    try {
+        const payload = token.split('.')[1];
+        const decoded = JSON.parse(atob(payload));
+        return String(decoded.user_id);
+    } catch (e) {
+        console.error("Failed to parse JWT:", e);
+        return null;
+    }
+}

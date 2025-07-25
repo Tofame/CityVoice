@@ -73,7 +73,12 @@ func main() {
 
 		var project models.Project
 		// Fetch the project from the database
-		if err := database.DB.Preload("ProjectComments").First(&project, projectID).Error; err != nil {
+		if err := database.DB.
+			Preload("ProjectComments", func(db *gorm.DB) *gorm.DB {
+				return db.Order("created_at DESC").Limit(10)
+			}).
+			First(&project, projectID).Error; err != nil {
+
 			if err == gorm.ErrRecordNotFound {
 				render(c, "error.html", gin.H{"Title": "Not Found", "Message": "Project not found."})
 			} else {

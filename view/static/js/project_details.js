@@ -1,10 +1,11 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async () => {
     const commentForm = document.getElementById('comment-form');
     const commentContent = document.getElementById('commentContent');
     const commentsList = document.getElementById('comments-list');
     const noCommentsMessage = document.getElementById('no-comments-message');
     const commentCountSpan = document.getElementById('comment-count');
     const commentMessage = document.getElementById('comment-message');
+    const comments = document.querySelectorAll('.project-comment');
 
     if (commentForm) {
         commentForm.addEventListener('submit', async function(event) {
@@ -55,10 +56,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     const authorName = "You";
                     newCommentDiv.innerHTML = `
-                        <p class="text-gray-800 font-semibold mb-1">${authorName}</p>
+                        <p class="comment-author text-gray-800 font-semibold mb-1">${authorName}</p>
                         <p class="text-gray-700 text-sm mb-2">${result.content}</p>
                         <span class="text-xs text-gray-500">${formattedDate}</span>
                     `;
+                    const authorElem = newCommentDiv.querySelector('.comment-author');
+                    authorElem.classList.add('current-user-comment');
 
                     if (noCommentsMessage && commentsList.contains(noCommentsMessage)) {
                         commentsList.removeChild(noCommentsMessage);
@@ -88,6 +91,22 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     } else {
-        console.warn("Comment form not found. AJAX comment submission will not work.");
+        console.warn("Comment form not found.");
     }
+
+    updateCommentAuthors();
 });
+
+function updateCommentAuthors() {
+    const currentUserId = String(getCurrentUserIdFromToken());
+    const comments = document.querySelectorAll('.project-comment');
+
+    comments.forEach(comment => {
+        const userId = comment.dataset.userId;
+        const authorElem = comment.querySelector('.comment-author');
+        if (userId === currentUserId) {
+            authorElem.textContent = "You";
+            authorElem.classList.add('current-user-comment');
+        }
+    });
+}
