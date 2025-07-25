@@ -1,5 +1,6 @@
-document.addEventListener('DOMContentLoaded', () => {
-    updateNavUI_UserProfile();
+document.addEventListener('DOMContentLoaded', async () => {
+    await updateNavUI_UserProfile();
+    document.dispatchEvent(new Event('navigationBarReady'));
 });
 
 const nb_userInfoBtn = document.getElementById('nb_userInfoBtn');
@@ -83,15 +84,14 @@ async function fetchUserProfile(token) {
 
 async function updateNavUI_UserProfile() {
     const token = getAuthToken();
-
-    // Always hide admin button initially
-    nb_adminPanelBtn.classList.add("hidden");
-
     if (!token) {
         // Guest state
         nb_userInfoBtn.textContent = 'Guest';
         nb_loginBtn.classList.remove('hidden');
         nb_logoutBtn.classList.add('hidden');
+
+        // Hide admin panel button since no token - logged out probably
+        nb_adminPanelBtn.classList.add("hidden");
         return;
     }
 
@@ -122,5 +122,14 @@ async function updateNavUI_UserProfile() {
     // Show admin button if user has admin access
     if (AccessLevel?.[userProfile.access] === "Admin") {
         nb_adminPanelBtn.classList.remove("hidden");
+    } else {
+        nb_adminPanelBtn.classList.add("hidden");
     }
+}
+
+// Unverified, because we just do it by checking if admin button is visible. This is in no way
+// trustable way to check being admin. However, it is enough, since we verify properly server-side anyway.
+// so there is no need to fetch being 'admin' through API.
+function isAdmin_Clientside() {
+    return !nb_adminPanelBtn.classList.contains("hidden");
 }

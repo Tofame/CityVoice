@@ -23,6 +23,8 @@ func ProjectRoutes(r *gin.Engine) {
 
 	project.POST("/:id/comments", middleware.RequireJWTAuth(), submitComment)
 	project.DELETE("/:id/comments/:commentID", middleware.RequireJWTAuth(), deleteComment)
+	project.PUT("/:id/comments/:commentID", middleware.RequireJWTAuth(), updateComment)
+
 	project.POST("/:id/vote", middleware.RequireJWTAuth(), castVote)
 
 	admin := project.Group("")
@@ -478,4 +480,55 @@ func castVote(c *gin.Context) {
 		"votes_up":   project.VotesUp,
 		"votes_down": project.VotesDown,
 	})
+}
+
+func updateComment(c *gin.Context) {
+	commentIDStr := c.Param("commentID")
+	commentID, err := strconv.ParseUint(commentIDStr, 10, 32)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid comment ID format"})
+		return
+	}
+
+	var input struct {
+		Content string `json:"content" binding:"required"`
+	}
+
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input", "details": err.Error()})
+		return
+	}
+
+	userID, ok := middleware.GetUserID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "User ID not found in context"})
+		return
+	}
+
+	var comment models.ProjectComment
+	if err := database.DB.First(&comment, commentID).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Comment not found"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch comment", "details": err.Error()})
+		}
+		return
+	}
+
+	// Only the comment author or an admin can edit
+	if comment.UserID != userID && !middleware.IsAdmin(c) {
+		c.JSON(http.StatusForbidden, gin.H{"error": "You are not authorized to edit this comment"})
+		return
+	}
+
+	comment.Content = input.Content
+	now := time.Now()
+	comment.UpdatedAt = &now
+
+	if err := database.DB.Save(&comment).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update comment"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Comment updated", "content": comment.Content})
 }

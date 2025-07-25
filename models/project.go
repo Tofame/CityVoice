@@ -20,9 +20,10 @@ type Project struct {
 }
 
 type ProjectComment struct {
-	ID        uint      `json:"id"         gorm:"primaryKey;autoIncrement"`
-	ProjectID uint      `json:"project_id" gorm:"index"`
-	UserID    uint      `json:"user_id"    gorm:"index"`
-	Content   string    `json:"content"    gorm:"type:text;not null"`
-	CreatedAt time.Time `json:"created_at" gorm:"autoCreateTime"`
+	ID        uint       `json:"id"         gorm:"primaryKey;autoIncrement"`
+	ProjectID uint       `json:"project_id" gorm:"index"`
+	UserID    uint       `json:"user_id"    gorm:"index"`
+	Content   string     `json:"content"    gorm:"type:text;not null"`
+	CreatedAt time.Time  `json:"created_at" gorm:"autoCreateTime"`
+	UpdatedAt *time.Time `json:"updated_at"`
 }
