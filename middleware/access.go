@@ -45,3 +45,14 @@ func IsAdmin(c *gin.Context) bool {
 	access, ok := GetAccess(c)
 	return ok && access == models.AccessAdmin
 }
+
+func IsModerator(c *gin.Context) bool {
+	access, ok := GetAccess(c)
+	return ok && access == models.AccessMod
+}
+
+// Return: 'True' Means it's either Admin or Moderator, but definitely not a normal user.
+func HasModeratorPerms(c *gin.Context) bool {
+	access, ok := GetAccess(c)
+	return ok && access >= models.AccessMod
+}

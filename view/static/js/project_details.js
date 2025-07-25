@@ -9,7 +9,7 @@ const buttonUpvote = document.getElementById('btn-upvote');
 const buttonDownvote = document.getElementById('btn-downvote');
 
 // This event is dispatched from navigation bar because there was race condition
-// between load of navigation bar and project details and we couldn't detect if user is admin because
+// between load of navigation bar and project details, and we couldn't detect if user is admin because
 // nav bar wasn't loaded while this updateCommentAuthors() was already complete.
 document.addEventListener('navigationBarReady', () => {
     updateCommentAuthors();
@@ -19,7 +19,7 @@ function updateCommentAuthors() {
     const currentUserId = String(getCurrentUserIdFromToken());
     const comments = document.querySelectorAll('.project-comment');
 
-    const isAdmin = isAdmin_Clientside();
+    const commentManagePerms = isAdmin_Clientside() || isModerator_Clientside();
 
     comments.forEach(comment => {
         const userId = comment.dataset.userId;
@@ -31,7 +31,7 @@ function updateCommentAuthors() {
         }
 
         // Allow comment management
-        if (userId === currentUserId || isAdmin) {
+        if (userId === currentUserId || commentManagePerms) {
             commentButtons.classList.remove("hidden");
         }
     });

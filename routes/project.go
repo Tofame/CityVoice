@@ -345,7 +345,7 @@ func deleteComment(c *gin.Context) {
 	}
 
 	userID, ok := middleware.GetUserID(c)
-	if !ok || (userID != comment.UserID && !middleware.IsAdmin(c)) {
+	if !ok || (userID != comment.UserID && !middleware.HasModeratorPerms(c)) {
 		c.JSON(http.StatusForbidden, gin.H{"error": "You are not authorized to delete this comment"})
 		return
 	}

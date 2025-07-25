@@ -125,11 +125,16 @@ async function updateNavUI_UserProfile() {
     } else {
         nb_adminPanelBtn.classList.add("hidden");
     }
+
+    nb_userInfoBtn.dataset.accessLevel = userProfile.access;
 }
 
 // Unverified, because we just do it by checking if admin button is visible. This is in no way
 // trustable way to check being admin. However, it is enough, since we verify properly server-side anyway.
 // so there is no need to fetch being 'admin' through API.
 function isAdmin_Clientside() {
-    return !nb_adminPanelBtn.classList.contains("hidden");
+    return AccessLevel[nb_userInfoBtn.dataset.accessLevel] === "Admin";
+}
+function isModerator_Clientside() {
+    return AccessLevel[nb_userInfoBtn.dataset.accessLevel] === "Moderator";
 }
