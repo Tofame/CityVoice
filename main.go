@@ -53,7 +53,12 @@ func main() {
 		render(c, "adminpanel.html", gin.H{"Title": "AdminPanel - CityVoice"})
 	})
 	r.GET("/userprofile", func(c *gin.Context) {
-		render(c, "userprofile.html", gin.H{"Title": "User Profile - CityVoice"})
+		data := gin.H{
+			"Title":              "User Profile - CityVoice",
+			"ProjectCategoryMap": models.ProjectCategoryMap(),
+			"ProjectDistrictMap": models.ProjectDistrictMap(),
+		}
+		render(c, "userprofile.html", data)
 	})
 	r.GET("/browse_projects", func(c *gin.Context) {
 		render(c, "browse_projects.html", gin.H{"Title": "Browsing Projects - CityVoice"})

@@ -40,24 +40,6 @@ body {
     border: 1px solid rgba(0,0,0,0.1);
 }
 
-#userProfile {
-    opacity: 1 !important;
-    transform: translate(-50%, -70%) scale(0.95);
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    position: fixed;
-    top: 40%;
-    left: 50%;
-    z-index: 1000;
-    padding: 2rem;
-    width: 100%;
-    max-width: 400px;
-
-    background: #e6e6e6;
-    border-radius: 0.75rem;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-    border: 1px solid rgba(0,0,0,0.1);
-}
-
 .section-heading {
     color: #1f2937; /* Tailwind's text-gray-800 */
     font-size: 1.5rem;

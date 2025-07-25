@@ -14,6 +14,7 @@ func UserRoutes(r *gin.Engine) {
 	user.GET("/email", getEmail)
 	user.GET("/id", getUserId)
 	user.GET("/profile", getUserProfile)
+	user.GET("/projects", getUserProjects)
 }
 
 func getEmail(c *gin.Context) {
@@ -67,4 +68,24 @@ func getUserProfile(c *gin.Context) {
 		"name":        user.Name,
 		"surname":     user.Surname,
 	})
+}
+
+func getUserProjects(c *gin.Context) {
+	uidAny, exists := c.Get("user_id")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return
+	}
+	userID := uidAny.(uint)
+
+	var projects []models.Project
+	if err := database.DB.
+		Where("author_id = ?", userID).
+		Order("created_at DESC").
+		Find(&projects).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch projects"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"projects": projects})
 }

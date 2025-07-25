@@ -103,3 +103,14 @@ function getCurrentUserIdFromToken() {
         return null;
     }
 }
+
+function formatCost(cost) {
+    if (cost >= 1_000_000_000) {
+        return (cost / 1_000_000_000).toFixed(2).replace(/\.00$/, '') + 'B';
+    } else if (cost >= 1_000_000) {
+        return (cost / 1_000_000).toFixed(2).replace(/\.00$/, '') + 'M';
+    } else if (cost >= 1_000) {
+        return (cost / 1_000).toFixed(2).replace(/\.00$/, '') + 'K';
+    }
+    return cost.toString();
+}

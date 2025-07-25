@@ -42,6 +42,7 @@ func submitProject(c *gin.Context) {
 		Category    models.ProjectCategory `json:"category" binding:"required"`
 		District    models.ProjectDistrict `json:"district" binding:"required"`
 		ImageURL    *string                `json:"image_url"`
+		Cost        uint                   `json:"cost" binding:"required"`
 	}
 
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -61,6 +62,7 @@ func submitProject(c *gin.Context) {
 		Category:    input.Category,
 		District:    input.District,
 		ImageURL:    input.ImageURL,
+		Cost:        input.Cost,
 		Status:      models.PENDING,
 		AuthorID:    userID,
 	}
