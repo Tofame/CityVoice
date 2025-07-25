@@ -14,18 +14,22 @@ It fosters engamenet and awareness of the townsfolk about how their city prosper
   Secure sign-up/login using JWT-based token system.
 
 - 🛡️ **Admin Panel**
-  Admin Panel usable only by authorized users. Allows for user management.
-  In the future will allow for project management (WIP).
+  Admin Panel usable only by authorized users. Allows for management of users and projects posted.
 
 - 📨 **Newsletter Subscription**  
   Users can subscribe to updates and notifications about new initiatives.
 
-- 📢 **Projects Voting (WIP, Not implemented yet)**  
-  Authenticated users can vote on proposed city improvement projects.
-
-- 🔍 **Projects Browsing (WIP – Not implemented yet)**  
+- 🔍 **Projects Browsing**  
   Panel filled with projects with assistance of many filters like project status, will allow
   residents to easily stay up-to-date on how the city changes.
+
+- 📢 **Projects Voting**  
+  Authenticated users can vote on proposed city improvement projects.
+  The vote can be either positive (upvote) or negative (downvote). It is possible to cancel/change assigned vote.
+
+- 💬 **Project Comments**
+  Besides voting on projects, each of the projects has a comment section, in which logged users can leave
+  their opinions. For each posted comment, the author of the comment and site moderator/admin have ability to edit/remove them.
 
 ---
 
@@ -50,6 +54,7 @@ It fosters engamenet and awareness of the townsfolk about how their city prosper
 <img src="https://github.com/user-attachments/assets/e0fc4ac1-ef5b-40b2-99d3-44762ffe09ea" width="400" alt="website 1"/>
 <img src="https://github.com/user-attachments/assets/3c5c88da-2f61-4e80-a4c9-17414f59999c" width="400" alt="website 3"/>
 <img src="https://github.com/user-attachments/assets/7caf0cca-2731-4ec6-8076-dbfdd5591787" width="400" alt="website 2"/>
+<img width="400" alt="project_site" src="https://github.com/user-attachments/assets/1ae6e61b-fd4b-4ac5-adfd-1ce8e2ea75fb" />
 
 ## Dependencies
 
