@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Attach listeners
     saveUserEdit.addEventListener('click', async () => {
-        const token = localStorage.getItem('token');
+        const token = getAuthToken();
         if (!token) {
             showMessage('You are not authorized to perform this action.', 'error');
             return;
@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     saveProjectEdit.addEventListener('click', async () => {
-        const token = localStorage.getItem('token');
+        const token = getAuthToken();
         if (!token) {
             showMessage('You are not authorized to perform this action.', 'error');
             return;
@@ -207,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function fetchProjects(page = 1) {
-    const token = localStorage.getItem('token');
+    const token = getAuthToken();
     if (!token) {
         showMessage('Authentication required to access admin panel.', 'error');
         showLoginForm();
@@ -301,7 +301,7 @@ function renderProjectList(projects) {
     projectList.querySelectorAll('.edit-project-btn').forEach(btn => {
         btn.addEventListener('click', async (e) => {
             const projectId = e.currentTarget.dataset.projectId;
-            const token = localStorage.getItem('token');
+            const token = getAuthToken();
             try {
                 const res = await fetch(`/api/project/${projectId}`, { headers: { Authorization: `Bearer ${token}` } });
                 if (!res.ok) {
@@ -332,7 +332,7 @@ function renderProjectList(projects) {
                 return;
             }
 
-            const token = localStorage.getItem('token');
+            const token = getAuthToken();
             if (!token) {
                 showMessage('You are not authorized to perform this action.', 'error');
                 return;
@@ -408,7 +408,7 @@ function renderProjectPagination(totalProjects, currentUserPage, limit) {
 }
 
 async function fetchUsers(page = 1) {
-    const token = localStorage.getItem('token');
+    const token = getAuthToken();
     if (!token) {
         showMessage('Authentication required to access admin panel.', 'error');
         showLoginForm();
@@ -495,7 +495,7 @@ function renderUserList(users) {
     userList.querySelectorAll('.edit-user-btn').forEach(btn => {
         btn.addEventListener('click', async (e) => {
             const userId = e.currentTarget.dataset.userId;
-            const token = localStorage.getItem('token');
+            const token = getAuthToken();
             try {
                 const res = await fetch(`/api/users/${userId}`, { headers: { Authorization: `Bearer ${token}` } });
                 if (!res.ok) throw new Error('Failed to fetch user');
@@ -523,7 +523,7 @@ function renderUserList(users) {
                 return;
             }
 
-            const token = localStorage.getItem('token');
+            const token = getAuthToken();
             if (!token) {
                 showMessage('You are not authorized to perform this action.', 'error');
                 return;

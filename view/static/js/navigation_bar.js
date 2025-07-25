@@ -10,7 +10,7 @@ const nb_homeBtns = document.querySelectorAll('.home-link');
 
 // UserProfile Button
 nb_userInfoBtn.addEventListener('click', async () => {
-    const token = localStorage.getItem('token');
+    const token = getAuthToken();
     if (!token) return; // probably a guest
 
     goToLink('/userprofile');
@@ -82,7 +82,7 @@ async function fetchUserProfile(token) {
 }
 
 async function updateNavUI_UserProfile() {
-    const token = localStorage.getItem('token');
+    const token = getAuthToken();
 
     // Always hide admin button initially
     nb_adminPanelBtn.classList.add("hidden");

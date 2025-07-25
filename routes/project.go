@@ -5,6 +5,7 @@ import (
 	"CityVoice/middleware"
 	"CityVoice/models"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"net/http"
 	"strconv"
 	"strings"
@@ -22,6 +23,7 @@ func ProjectRoutes(r *gin.Engine) {
 
 	project.POST("/:id/comments", middleware.RequireJWTAuth(), submitComment)
 	project.DELETE("/:id/comments/:commentID", middleware.RequireJWTAuth(), deleteComment)
+	project.POST("/:id/vote", middleware.RequireJWTAuth(), castVote)
 
 	admin := project.Group("")
 	admin.Use(middleware.RequireJWTAuth(), middleware.RequireAccess(models.AccessAdmin))
@@ -356,4 +358,124 @@ func deleteComment(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Comment deleted successfully"})
+}
+
+func castVote(c *gin.Context) {
+	projectIDStr := c.Param("id")
+	projectID, err := strconv.ParseUint(projectIDStr, 10, 32)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid project ID format"})
+		return
+	}
+
+	var input struct {
+		Vote int `json:"vote" binding:"required"` // 1 or -1
+	}
+	if err := c.ShouldBindJSON(&input); err != nil || (input.Vote != 1 && input.Vote != -1) {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Vote must be 1 (up) or -1 (down)"})
+		return
+	}
+
+	userID, ok := middleware.GetUserID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "User ID not found in context"})
+		return
+	}
+
+	var existing models.ProjectVote
+	var project models.Project
+	transaction := database.DB.Begin()
+
+	// Lock project row for update, because we need to have synced upvoting/downvoting of users with the 'cache'
+	// that we basically have in Project model (by storing upvote/downvote count there, instead of summing up votes)
+	if err := transaction.
+		Clauses(clause.Locking{Strength: "UPDATE"}).
+		First(&project, projectID).Error; err != nil {
+		transaction.Rollback()
+		c.JSON(http.StatusNotFound, gin.H{"error": "Project not found"})
+		return
+	}
+
+	err = transaction.Where("user_id = ? AND project_id = ?", userID, projectID).First(&existing).Error
+	if err == nil {
+		// User already voted on this type e.g. second upvote
+		if existing.Vote == models.VoteType(input.Vote) {
+			// Remove vote
+			if err := transaction.Delete(&existing).Error; err != nil {
+				transaction.Rollback()
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to remove vote"})
+				return
+			}
+			if input.Vote == 1 {
+				project.VotesUp--
+			} else {
+				project.VotesDown--
+			}
+			transaction.Save(&project)
+			transaction.Commit()
+			c.JSON(http.StatusOK, gin.H{
+				"message":    "Vote removed",
+				"votes_up":   project.VotesUp,
+				"votes_down": project.VotesDown,
+			})
+			return
+		} else {
+			// Switch vote
+			if input.Vote == 1 {
+				project.VotesUp++
+				project.VotesDown--
+			} else {
+				project.VotesDown++
+				project.VotesUp--
+			}
+			existing.Vote = models.VoteType(input.Vote)
+			if err := transaction.Save(&existing).Error; err != nil {
+				transaction.Rollback()
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update vote"})
+				return
+			}
+			transaction.Save(&project)
+			transaction.Commit()
+			c.JSON(http.StatusOK, gin.H{
+				"message":    "Vote updated",
+				"votes_up":   project.VotesUp,
+				"votes_down": project.VotesDown,
+			})
+			return
+		}
+	}
+
+	if err != gorm.ErrRecordNotFound {
+		transaction.Rollback()
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Vote lookup failed"})
+		return
+	}
+
+	// New vote
+	newVote := models.ProjectVote{
+		UserID:    userID,
+		ProjectID: uint(projectID),
+		Vote:      models.VoteType(input.Vote),
+		CreatedAt: time.Now(),
+	}
+
+	if err := transaction.Create(&newVote).Error; err != nil {
+		transaction.Rollback()
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to cast vote"})
+		return
+	}
+
+	if input.Vote == 1 {
+		project.VotesUp++
+	} else {
+		project.VotesDown++
+	}
+
+	transaction.Save(&project)
+	transaction.Commit()
+	c.JSON(http.StatusCreated, gin.H{
+		"message":    "Vote cast",
+		"votes_up":   project.VotesUp,
+		"votes_down": project.VotesDown,
+	})
 }

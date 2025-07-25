@@ -24,4 +24,5 @@ func Connect() {
 	DB.AutoMigrate(&models.Newsletter{})
 	DB.AutoMigrate(&models.Project{})
 	DB.AutoMigrate(&models.ProjectComment{})
+	DB.AutoMigrate(&models.ProjectVote{})
 }

@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 async function showUserProfile() {
-    const token = localStorage.getItem('token');
+    const token = getAuthToken();
 
     if (!token) {
         showMessage('Could not load user profile. Please login.', 'error');

@@ -86,8 +86,12 @@ function showMessage(message, type = 'info') {
     }, 3000);
 }
 
+function getAuthToken() {
+    return localStorage.getItem('token');
+}
+
 function getCurrentUserIdFromToken() {
-    const token = localStorage.getItem('token');
+    const token = getAuthToken();
     if (!token) return null;
 
     try {
