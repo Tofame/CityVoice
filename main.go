@@ -4,6 +4,7 @@ import (
 	"CityVoice/database"
 	"CityVoice/models"
 	"CityVoice/routes"
+	"CityVoice/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"gorm.io/gorm"
@@ -33,6 +34,12 @@ func main() {
 	if err != nil {
 		log.Println(".env file not found, using system env vars")
 	}
+
+	// Uncomment below, to generate yourself a JWT secret key for .env file :)
+	// fmt.Println(utils.GenerateRandomSecret())
+
+	// load JWT secret after .env is loaded
+	utils.LoadJwtKey()
 
 	database.Connect()
 	r := gin.Default()

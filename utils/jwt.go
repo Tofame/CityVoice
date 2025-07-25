@@ -2,11 +2,23 @@ package utils
 
 import (
 	"CityVoice/models"
+	"crypto/rand"
+	"encoding/hex"
 	"github.com/golang-jwt/jwt/v5"
+	"log"
+	"os"
 	"time"
 )
 
-var JwtKey = []byte("a8f3d9e2c7b4f1a5d6e8c0b9f2a3d4e7") // unsafe btw, we should be getting it from env, but it's a test app anyway.
+var JwtKey []byte
+
+func LoadJwtKey() {
+	secret := os.Getenv("JWT_SECRET")
+	if secret == "" {
+		log.Fatal("JWT_SECRET environment variable is not set")
+	}
+	JwtKey = []byte(secret)
+}
 
 func GenerateJWT(userID uint, access models.AccessLevel) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
@@ -14,4 +26,13 @@ func GenerateJWT(userID uint, access models.AccessLevel) (string, error) {
 		"exp":     time.Now().Add(1 * time.Hour).Unix(), // expiration of the token, 1h should be enough
 	})
 	return token.SignedString(JwtKey)
+}
+
+func GenerateRandomSecret() string {
+	bytes := make([]byte, 32) // 32 bytes = 256 bits
+	_, err := rand.Read(bytes)
+	if err != nil {
+		log.Fatalf("Failed to generate random secret: %v", err)
+	}
+	return hex.EncodeToString(bytes)
 }
