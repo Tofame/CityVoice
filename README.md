@@ -3,8 +3,8 @@
 **CityVoice** is a web platform that enables city residents to vote on and support local projects that shape their community.
 It fosters engamenet and awareness of the townsfolk about how their city prospers and progresses.
 
-The project is deployed on (Render)[https://render.com/] service, which allows free hosting of such apps to get a preview.
-The link to the hosted version of CityVoice here - (click)[https://cityvoice-9uwx.onrender.com/]
+The project is deployed on [Render](https://render.com/) service, which allows free hosting of such apps to get a preview.
+The link to the hosted version of CityVoice here - [click](https://cityvoice-9uwx.onrender.com/)
 
 (Images at the bottom)
 [Go to images](#images)
