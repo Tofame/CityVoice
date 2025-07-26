@@ -3,6 +3,9 @@
 **CityVoice** is a web platform that enables city residents to vote on and support local projects that shape their community.
 It fosters engamenet and awareness of the townsfolk about how their city prospers and progresses.
 
+The project is deployed on (Render)[https://render.com/] service, which allows free hosting of such apps to get a preview.
+The link to the hosted version of CityVoice here - (click)[https://cityvoice-9uwx.onrender.com/]
+
 (Images at the bottom)
 [Go to images](#images)
 
@@ -45,9 +48,11 @@ It fosters engamenet and awareness of the townsfolk about how their city prosper
 - RESTful API
 
 ## 📝 Current Implementation Details
-- JWT secret key is *currently* not so secret, I will move it (make new one) to .env when it's production and not development.
-- Currently I use local database with connection string being straight in DB class. This also will be .env or settings file.
-- The local database I use is on port 3306, localhost, setup with XAMPP, but can be anything.
+- Added '.env' loading as well as '.env.dist', so you can use it as a template for '.env' file. 
+- Currently in .env we expect JWT secret key (used for generating JWT auth tokens). You can generate your own using commented method in main.
+  // fmt.Println(utils.GenerateRandomSecret())
+- In .env we also expect a connection string to the database. In case it is missing in .env, it fallbacks to localhost on 3306, to db called 'cityvoice'.
+  So you can e.g. setup such db on XAMPP (windows) or w/e locally.
 - When run, the app is set to run on port 8080, e.g. http://localhost:8080/?#
 
 ## Images
