@@ -57,8 +57,8 @@ The link to the hosted version of CityVoice here - [click](https://cityvoice-9uw
 
 ## Images
 <img src="https://github.com/user-attachments/assets/e0fc4ac1-ef5b-40b2-99d3-44762ffe09ea" width="400" alt="website 1"/>
-<img src="https://github.com/user-attachments/assets/3c5c88da-2f61-4e80-a4c9-17414f59999c" width="400" alt="website 3"/>
-<img src="https://github.com/user-attachments/assets/7caf0cca-2731-4ec6-8076-dbfdd5591787" width="400" alt="website 2"/>
+<img width="400" alt="cityvoice_adminpanel" src="https://github.com/user-attachments/assets/78e804b8-bc44-436e-ba41-7310cdf043f4" />
+<img width="400" alt="cityvoice_profile" src="https://github.com/user-attachments/assets/59ea0872-ddc8-4f31-abe2-c479cbdcf26f" />
 <img width="400" alt="project_site" src="https://github.com/user-attachments/assets/1ae6e61b-fd4b-4ac5-adfd-1ce8e2ea75fb" />
 
 ## Dependencies
